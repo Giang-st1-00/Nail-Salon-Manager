@@ -1,5 +1,5 @@
 function DashBoard() {
-  return <h1>This is page DashBoard</h1>;
+  return <div style={{ height: "1000px" }}>This is page DashBoard</div>;
 }
 
 export default DashBoard;

@@ -1,0 +1,8 @@
+.wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: calc(100% - var(--sidebar-width));
+  height: var(--header-height);
+  background-color: #ccc;
+}

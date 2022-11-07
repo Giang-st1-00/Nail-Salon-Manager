@@ -1,30 +1,29 @@
+import { Outlet } from "react-router-dom";
+import { Layout } from "antd";
+import classNames from "classnames/bind";
+import style from "./index.module.scss";
 import Header from "../Header";
 import Footer from "../Footer";
-import { Outlet, Link } from "react-router-dom";
+import SideBar from "../SideBar";
+
+const cx = classNames.bind(style);
+const { Content } = Layout;
 
 function DefaultLayout() {
   return (
     <div>
-      {/* test */}
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">DashBoard page</Link>
-          </li>
-          <li>
-            <Link to="/job">Job page</Link>
-          </li>
-          <li>
-            <Link to="/salary">salary page</Link>
-          </li>
-          <li>
-            <Link to="/product">product page</Link>
-          </li>
-        </ul>
-      </nav>
-      <Header />
-      <Outlet />
-      <Footer />
+      <Layout>
+        <SideBar />
+        <Layout>
+          <Header />
+          <div className={cx("wrap-content")}>
+            <Content className={cx("content")}>
+              <Outlet />
+            </Content>
+            <Footer />
+          </div>
+        </Layout>
+      </Layout>
     </div>
   );
 }
