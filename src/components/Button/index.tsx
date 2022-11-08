@@ -1,5 +1,9 @@
-function Button() {
-  return <h1>This is button</h1>;
+import { Button as AntdButton } from 'antd';
+
+function Button(props : any) {
+  return (
+    <AntdButton type="primary" {...props}/>
+  );
 }
 
 export default Button;
