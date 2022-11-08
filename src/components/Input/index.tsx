@@ -1,22 +1,25 @@
-import { AudioOutlined } from "@ant-design/icons";
 import { Input as AntdInput, Space } from "antd";
-import { Component } from "react";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
+const { Search } = AntdInput;
+type PInputProps = {
+  placeholder?: string;
+  allowClear?: boolean;
+  suffix?: React.ReactNode;
+  search?:boolean
+};
 
-function Input(props : any) {
+function Input({ placeholder, allowClear, suffix,search }: PInputProps) {
+  const Component = search ? Search : AntdInput;
   return (
-    <AntdInput 
-      {...props} 
+    <Component
       className={cx("input")}
+      placeholder={placeholder}
+      allowClear={allowClear}
+      suffix={suffix}
     />
-      // className={cx("input")}
-      // suffix={suffix}
-      // allowClear
-      // placeholder={placeholder}
-      // style={{ width: 200 }}
   );
 }
 

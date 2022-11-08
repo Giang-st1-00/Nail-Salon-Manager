@@ -1,8 +1,42 @@
-import { Button as AntdButton } from 'antd';
+import { Button as AntdButton } from "antd";
+import classNames from "classnames/bind";
+import style from "./index.module.scss";
 
-function Button(props : any) {
+const cx = classNames.bind(style);
+type TButtonProps = {
+  children?: string;
+  Icon?: React.ReactNode;
+  type?:
+    | "primary"
+    | "link"
+    | "text"
+    | "ghost"
+    | "default"
+    | "dashed"
+    | undefined;
+  size?: "large" | "middle" | "small";
+  shape?: "default" | "circle" | "round";
+};
+
+function Button({
+  children,
+  Icon,
+  type = "primary",
+  size = "middle",
+  shape = "default",
+}: TButtonProps) {
   return (
-    <AntdButton type="primary" {...props}/>
+    <div className={cx("wrapper")}>
+      <AntdButton
+        shape={shape}
+        size={size}
+        className={cx("btn")}
+        icon={Icon}
+        type={type}
+      >
+        {children}
+      </AntdButton>
+    </div>
   );
 }
 
