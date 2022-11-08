@@ -4,49 +4,11 @@ import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 import images from "../../assets/images";
-import {
-  DashboardOutlined,
-  UserOutlined,
-  ToolOutlined,
-  DollarCircleOutlined,
-  ShoppingOutlined,
-  BulbOutlined,
-} from "@ant-design/icons";
+import { BulbOutlined } from "@ant-design/icons";
+import config from "../../config";
 const cx = classNames.bind(style);
 const { Sider } = Layout;
 
-const items = [
-  {
-    key: 1,
-    icon: <DashboardOutlined />,
-    label: "Dashboard",
-    path: "/",
-  },
-  {
-    key: 2,
-    icon: <UserOutlined />,
-    label: "User",
-    path: "user",
-  },
-  {
-    key: 3,
-    icon: <ToolOutlined />,
-    label: "Job",
-    path: "job",
-  },
-  {
-    key: 4,
-    icon: <DollarCircleOutlined />,
-    label: "Salary",
-    path: "salary",
-  },
-  {
-    key: 5,
-    icon: <ShoppingOutlined />,
-    label: "Product",
-    path: "product",
-  },
-];
 const SubMenu = Menu.SubMenu;
 function SideBar() {
   return (
@@ -63,7 +25,7 @@ function SideBar() {
           mode="inline"
           defaultSelectedKeys={["1"]}
         >
-          {items.map((item) => (
+          {config.listSideBar.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <Link to={item.path}>{item.label}</Link>
             </Menu.Item>

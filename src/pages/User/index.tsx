@@ -1,5 +1,5 @@
 function User() {
-  return <h1>This is User</h1>;
+  return <h1>This is page user</h1>;
 }
 
 export default User;
