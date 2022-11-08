@@ -1,0 +1,8 @@
+.wrapper {
+    display: inline-block; 
+    .btn {
+    }
+    .btn + .btn {
+        margin-left: 16px;
+    }
+}
