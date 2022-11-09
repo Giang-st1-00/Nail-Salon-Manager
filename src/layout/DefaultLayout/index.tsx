@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import classNames from "classnames/bind";
+import BreadCrumb from "../../components/BreadCrumb";
 import style from "./index.module.scss";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -18,6 +19,7 @@ function DefaultLayout() {
           <Header />
           <div className={cx("wrap-content")}>
             <Content className={cx("content")}>
+              <BreadCrumb></BreadCrumb>
               <Outlet />
             </Content>
             <Footer />

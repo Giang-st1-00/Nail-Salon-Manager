@@ -1,0 +1,29 @@
+.wrapper {
+  .card {
+    padding: 32px 18px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
+    }
+  }
+}
+.card-body {
+  display: flex;
+  .icon {
+    font-size: 54px;
+    margin-right: 24px;
+  }
+  .content {
+    transform: translateY(-20px);
+    .title {
+      line-height: 1.6rem;
+      font-size: 1.6rem;
+      color: var(--text-color);
+      font-weight: 400;
+    }
+    .number {
+      line-height: 3.2rem;
+      font-size: 2.4rem;
+    }
+  }
+}

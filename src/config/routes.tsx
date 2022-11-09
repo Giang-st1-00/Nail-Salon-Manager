@@ -3,5 +3,6 @@ const config = {
   job: "/job",
   salary: "/salary",
   product: "/product",
+  user: "/user",
 };
 export default config;
