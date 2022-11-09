@@ -10,7 +10,7 @@ function DashBoard() {
     <div style={{ height: "1000px" }}>
       <div>This is page DashBoard</div>
       This is page DashBoard
-      <Button type="primary">Search</Button>
+      <Button type="default">Search</Button>
       <Input
         // suffix={<SearchOutlined/>}
         search
