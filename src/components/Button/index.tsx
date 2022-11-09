@@ -16,6 +16,7 @@ type TButtonProps = {
     | undefined;
   size?: "large" | "middle" | "small";
   shape?: "default" | "circle" | "round";
+  className?: any;
 };
 
 function Button({
@@ -24,13 +25,17 @@ function Button({
   type = "primary",
   size = "middle",
   shape = "default",
+  className,
 }: TButtonProps) {
+  const classes = cx("wrapper", {
+    [className]: className,
+  });
   return (
     <div className={cx("wrapper")}>
       <AntdButton
         shape={shape}
         size={size}
-        className={cx("btn")}
+        className={classes}
         icon={Icon}
         type={type}
       >
