@@ -33,9 +33,9 @@ function Button({
   return (
     <div className={cx("wrapper")}>
       <AntdButton
+        className={classes}
         shape={shape}
         size={size}
-        className={classes}
         icon={Icon}
         type={type}
       >

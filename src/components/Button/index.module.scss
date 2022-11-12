@@ -1,6 +1,7 @@
 .wrapper {
     display: inline-block; 
     .btn {
+        border: none;
     }
     .btn + .btn {
         margin-left: 16px;
