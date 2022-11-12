@@ -17,10 +17,12 @@ function DefaultLayout() {
         <SideBar />
         <Layout>
           <Header />
-          <div className={cx("wrap-content")}>
-            <Content className={cx("content")}>
+          <div className={cx("container")}>
+            <Content className={cx("wrap-content")}>
               <BreadCrumb></BreadCrumb>
-              <Outlet />
+              <div className={cx("content")}>
+                <Outlet />
+              </div>
             </Content>
             <Footer />
           </div>

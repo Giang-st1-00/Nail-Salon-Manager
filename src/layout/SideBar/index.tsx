@@ -1,6 +1,6 @@
 import { Layout, Menu, Typography, Switch } from "antd";
 import type { MenuProps } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 import images from "../../assets/images";
@@ -11,6 +11,9 @@ const { Sider } = Layout;
 
 const SubMenu = Menu.SubMenu;
 function SideBar() {
+  let location = useLocation();
+  console.log(location);
+
   return (
     // dark light
     <Sider width={256} theme="light" trigger={null}>
@@ -23,7 +26,7 @@ function SideBar() {
           className={cx("menu")}
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          // defaultSelectedKeys={["1"]}
         >
           {sideBarList.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
