@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import style from "./index.module.scss";
 import images from "../../assets/images";
 import { BulbOutlined } from "@ant-design/icons";
-import config from "../../config";
+import sideBarList from "./configSideBar";
 const cx = classNames.bind(style);
 const { Sider } = Layout;
 
@@ -25,7 +25,7 @@ function SideBar() {
           mode="inline"
           defaultSelectedKeys={["1"]}
         >
-          {config.listSideBar.map((item) => (
+          {sideBarList.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>
               <Link to={item.path}>{item.label}</Link>
             </Menu.Item>
