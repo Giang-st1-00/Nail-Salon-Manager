@@ -6,57 +6,39 @@
   height: var(--header-height);
   background-color: #fff;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  .menuFoldOutlined{
-    height: 100%;
-    padding: 0 27px;
+  font-size: 20px;
+  .toggle_sideBar{
     display: flex;
+    justify-content: center;
     align-items: center;
+    width: 72px;
+    height: 72px;
     transition: all .3s ease-out;
-    .menuIcon{
-      font-size: 20px;
-    }
-  }
-  .menuFoldOutlined:hover {
-    background-color: #f9f9fc;
     cursor: pointer;
+  }
+  .toggle_sideBar:hover {
+    background-color: #f9f9fc;
     color: #21b6ff;
   }
-  .rightContainer{
+  .action{
     height: 100%;
     display: flex;
     justify-content: center;
-    .bellOutlined {
-      display: flex;
-      padding: 0;
-      align-items: center;
-      width: 48px;
-      height: 100%;
-      margin-left: 70px;
-      clear: both;
-      white-space: nowrap;
-      .avatar{
-        background-color: #fff;
-        font-size: 24px;
-        color: #b2b0c7;
-        border-radius: 50px;
-        transition: all .3s ease-out;
-
-      }
-      
+    align-items: center;
+    .notification {
+      background-color: #fff;
+      color: #b2b0c7;
+      font-size: 24px;
     }
-    .bellOutlined:hover .avatar{
+    .notification:hover .avatar{
       background-color: #f9f9fc;
       color: #21b6ff;
       cursor: pointer;
     }
     .languages{
-      margin : 0;
       padding: 0 20px;
-      height: 100%;
-      // border-radius: 50px;
-      display: flex;
-      align-items: center;
       transition: all .3s ease-out;
       .subMenu {
         padding : 0;
@@ -73,45 +55,37 @@
     .languages:hover{
       background-color: #f9f9fc;
     }
-    .menu-overflow {
-      display: flex;
-      align-items: center;
+    .account {
       padding: 0 10px;
-      height : 100%;
       transition: all .3s ease-out;
       .avatar{
         margin: 0 0 0 8px;
       }
     }
-    .menu-overflow:hover {
+    .account:hover {
       background-color: #f9f9fc;
     }
   }
 }
 
-.contentBell{
+.notification-list{
   padding: 12px 0;
   width: 320px;
-  .element {
+  .notification-item {
     padding: 12px 24px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
   }
-  .element:hover {
+  .notification-item:hover {
     background-color: #f9f9fc;
   }
-  .arrow {
-    display: flex;
-    align-items: center;
-  }
-  .done {
-    margin: 0;
+  .clear-notificaiton {
     text-align: center;
     padding: 10px 0;
   }
-  .done:hover {
+  .clear-notificaiton:hover {
     background-color: #f9f9fc;
-  
   }
 }
 

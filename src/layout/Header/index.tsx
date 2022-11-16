@@ -1,11 +1,8 @@
 import classNames from "classnames/bind";
-import style from "./index.module.scss";
 import {
   Avatar,
   Badge,
-  Button,
   Dropdown,
-  Image,
   Menu,
   MenuProps,
   Popover,
@@ -15,10 +12,11 @@ import {
   MenuFoldOutlined,
   BellOutlined,
 } from "@ant-design/icons";
+import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
 function Header() {
-  const elementBellData = [
+  const dataNotification = [
     {
       content: "New User is registered",
       time: "3 小时前",
@@ -41,59 +39,55 @@ function Header() {
     },
   ];
 
-  const contentBell = (
-    <div className={cx("contentBell")}>
-      {elementBellData.map((element, index) => {
+  const notification = (
+    <div className={cx("notification-list")}>
+      {dataNotification.map((item, index) => {
         const items: MenuProps["items"] = [
           {
-            label: `${element.content}`,
-            key: `${index}`,
+            key: index,
+            label: item.content,
           },
         ];
 
         return (
-          <div className={cx("element")}>
+          <div className={cx("notification-item")}>
             <div>
               <Dropdown menu={{ items }} placement="top" arrow>
-                <h4>{element.content}</h4>
+                <h4>{item.content}</h4>
               </Dropdown>
-              <p>{element.time}</p>
+              <p>{item.time}</p>
             </div>
-            <div className={cx("arrow")}>
               <RightOutlined />
-            </div>
           </div>
         );
       })}
-
       <div>
-        <p className={cx("done")}>Clear notifications</p>
+        <p className={cx("clear-notificaiton")}>Clear notifications</p>
       </div>
     </div>
   );
 
   return (
     <div className={cx("wrapper")}>
-      <div className={cx("menuFoldOutlined")}>
-        <MenuFoldOutlined className={cx("menuIcon")} />
+      <div className={cx("toggle_sideBar")}>
+        <MenuFoldOutlined />
       </div>
-      <div className={cx("rightContainer")}>
+      <div className={cx("action")}>
         <Popover
-          className={cx("bellOutlined")}
           trigger={"click"}
           placement="bottomLeft"
-          content={contentBell}
+          content={notification}
           showArrow={false}
         >
-          <span onClick={(e) => e.preventDefault()}>
-              <Badge dot>
-                <Avatar
-                  className={cx("avatar")}
-                  shape="square"
-                  icon={<BellOutlined />}
-                />
-              </Badge>
-          </span>
+              <span>
+                <Badge dot>
+                  <Avatar
+                  className={cx("notification")}
+                    shape="square"
+                    icon={<BellOutlined />}
+                  />
+                </Badge>
+              </span>
         </Popover>
 
         <Menu className={cx("languages")} mode="horizontal">
@@ -127,7 +121,7 @@ function Header() {
           </Menu.SubMenu>
         </Menu>
 
-        <Menu className={cx("menu-overflow")} mode="horizontal">
+        <Menu className={cx("account")} mode="horizontal">
           <Menu.SubMenu
             title={
               <>
