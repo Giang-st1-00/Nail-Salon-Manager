@@ -27,11 +27,12 @@ function CommonButton({
   shape = "default",
   className,
   htmlType,
-  border,
+  border = true,
   onClick,
   ...props
 }: TCommonButtonProps) {
   const classes = cx("btn", {
+    "no-border": !border,
     [className]: className,
   });
   return (

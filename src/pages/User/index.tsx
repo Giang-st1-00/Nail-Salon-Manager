@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Form,
   Row,
@@ -8,40 +8,54 @@ import {
   Modal,
   Popconfirm,
   Dropdown,
+  Radio,
+  InputNumber,
 } from "antd";
-import { DownOutlined, BarsOutlined } from "@ant-design/icons";
+import type { FormInstance } from "antd/es/form";
+import {
+  DownOutlined,
+  BarsOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import classNames from "classnames/bind";
 
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
-import classNames from "classnames/bind";
+import { IUser, IFilter } from "../../model";
+import { remainingUser } from "../../redux/selection";
+
+import {
+  addUser,
+  deleteUser,
+  deleteListUSer,
+  editUser,
+  changeStatus,
+} from "../../redux/slices/user";
 import style from "./index.module.scss";
+
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
-// template type
-interface IUser {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
+const { confirm } = Modal;
 function User() {
   const [form] = Form.useForm();
+  const formFilterRef = useRef<FormInstance>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isModalAdd, setIsModalAdd] = useState<boolean>(false);
-  const [isModalEdit, setIsModalEdit] = useState<boolean>(false);
+  const [isModal, setIsModal] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [dataSelectedRowKey, setDataSelectRowKey] = useState<IUser>();
-  // fetch data
-  const data = [];
-  for (let i = 0; i < 1000; i++) {
-    data.push({
-      key: "keydata" + i,
-      name: `Edward King ${i}`,
-      age: 32,
-      address: `London, Park Lane no. ${i}`,
-    });
-  }
-  // config form in modal
+
+  const dataUser: Array<IUser> = useSelector(remainingUser);
+
+  const dispatch = useDispatch();
+
+  const itemsActionRow = [
+    { key: "edit", label: "Update" },
+    {
+      key: "delete",
+      label: "Delete",
+    },
+  ];
   const formItemLayout = {
     labelCol: {
       span: 6,
@@ -50,75 +64,14 @@ function User() {
       span: 14,
     },
   };
-  const onSelectChangeRow = (
-    selectedRowKeys: React.Key[],
-    selectedRows: Array<IUser>
-  ) => {
-    console.log("data: ", selectedRows);
-    setSelectedRowKeys(selectedRowKeys);
-  };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChangeRow,
-  };
-  const showModal = () => {
-    setIsModalAdd(true);
-  };
-  const handleCancelAdd = () => {
-    setIsModalAdd(false);
-  };
-  const handleCancelEdit = () => {
-    setIsModalEdit(false);
-  };
-  const onFinish = (values: any) => {
-    console.log("Finish:", values);
-  };
-  const start = () => {
-    setLoading(true);
-    console.log(selectedRowKeys);
-    console.log(dataSelectedRowKey);
-    // ajax request after empty completing
-    setTimeout(() => {
-      setSelectedRowKeys([]);
-      setLoading(false);
-    }, 1000);
-  };
-  // handlerClickMenu
-  const handleMenuClick = (key: string, record: IUser) => {
-    setDataSelectRowKey(record);
-    if (key === "1") {
-      setIsModalEdit(true);
-    }
-  };
-  // create user
-  const onCreate = (values: IUser) => {
-    setIsModalAdd(false);
-    console.log("Received values of form: ", values);
-  };
-  // item action table
-  const items = [
-    { key: "1", label: "Update" },
-    {
-      key: "2",
-      label: (
-        <Popconfirm
-          title="Are you sure delete these items?"
-          placement="left"
-          onConfirm={start}
-          okText="OK"
-          cancelText="No"
-        >
-          Delete
-        </Popconfirm>
-      ),
-    },
-  ];
-
-  // table
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+    },
+    {
+      title: "Nick Name",
+      dataIndex: "nickName",
     },
     {
       title: "Age",
@@ -128,7 +81,21 @@ function User() {
       title: "Address",
       dataIndex: "address",
     },
-
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
+    {
+      title: "Create Time",
+      dataIndex: "createTime",
+      render: (date: Date) => {
+        return date.toLocaleString();
+      },
+    },
     {
       title: "Action",
       dataIndex: "operation",
@@ -137,8 +104,8 @@ function User() {
       render: (text: string, record: IUser) => (
         <Dropdown
           menu={{
-            items,
-            onClick: ({ key }) => handleMenuClick(key, record),
+            items: itemsActionRow,
+            onClick: ({ key }) => handleMenuRowClick(key, record),
           }}
         >
           <CommonButton className={cx("no-border")}>
@@ -150,13 +117,102 @@ function User() {
     },
   ];
 
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(selectedRowKeys);
+    },
+  };
+
+  const handleFilter = (values: IFilter) => {
+    if (values.name || values.date) {
+      const name = values.name ? values.name : "";
+      const date = values.date
+        ? [values.date[0].toLocaleString(), values.date[1].toLocaleString()]
+        : ["", ""];
+      dispatch(
+        changeStatus({
+          name,
+          date,
+        })
+      );
+    }
+  };
+
+  const handleResetForm = () => {
+    setLoading(true);
+
+    setTimeout(() => {
+      dispatch(
+        changeStatus({
+          name: "",
+          date: ["", ""],
+        })
+      );
+      formFilterRef.current?.resetFields();
+      setLoading(false);
+    }, 500);
+  };
+
+  const showModalCreate = () => {
+    form.resetFields();
+    setIsModal(true);
+  };
+
+  const handleSubmitDataUser = (user: IUser) => {
+    if (user.key) {
+      dispatch(editUser(user));
+    } else {
+      const newUser: IUser = {
+        ...user,
+        createTime: new Date(),
+        key: uuidv4(),
+      };
+      dispatch(addUser(newUser));
+    }
+    setIsModal(false);
+  };
+
+  const showConfirmDeleteUSer = (key: string) => {
+    confirm({
+      title: "Are you sure delete this record?",
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        dispatch(deleteUser(key));
+      },
+      onCancel() {},
+    });
+  };
+
+  const handleDeleteListUser = () => {
+    setLoading(true);
+    setTimeout(() => {
+      dispatch(deleteListUSer(selectedRowKeys));
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleMenuRowClick = (key: string, record: IUser) => {
+    form.setFieldsValue(record);
+    key === "edit" ? setIsModal(true) : showConfirmDeleteUSer(record.key);
+  };
   return (
     <div>
-      <Form name="filter-user" layout="horizontal" onFinish={onFinish}>
+      <Form
+        ref={formFilterRef}
+        name="filter-user"
+        layout="horizontal"
+        onFinish={handleFilter}
+      >
         <Row gutter={[24, 24]}>
           <Col span={7}>
-            <Form.Item name="username">
-              <CommonInput search placeholder="Search Name" />
+            <Form.Item name="name" shouldUpdate>
+              <CommonInput
+                search
+                placeholder="Search Name"
+                onSearch={() => formFilterRef.current?.submit()}
+              />
             </Form.Item>
           </Col>
           <Col span={7}>
@@ -164,7 +220,6 @@ function User() {
               name="date"
               valuePropName="date"
               label="CreateTime"
-              shouldUpdate
               colon={false}
             >
               <RangePicker />
@@ -184,14 +239,14 @@ function User() {
               <Col span={4}>
                 <Form.Item shouldUpdate>
                   {() => (
-                    <CommonButton type="default" htmlType="submit">
+                    <CommonButton type="default" onClick={handleResetForm}>
                       Reset
                     </CommonButton>
                   )}
                 </Form.Item>
               </Col>
               <Col span={4} offset={12}>
-                <CommonButton type="default" onClick={showModal}>
+                <CommonButton type="default" onClick={showModalCreate}>
                   Create
                 </CommonButton>
               </Col>
@@ -201,14 +256,16 @@ function User() {
       </Form>
 
       <Modal
-        title="Create User"
-        open={isModalAdd}
-        onCancel={handleCancelAdd}
+        title="modal-user"
+        open={isModal}
+        onCancel={() => {
+          setIsModal(false);
+        }}
         onOk={() => {
           form
             .validateFields()
             .then((values) => {
-              onCreate(values);
+              handleSubmitDataUser(values);
             })
             .catch((info) => {
               console.log("Validate Failed:", info);
@@ -217,82 +274,87 @@ function User() {
       >
         <Form
           form={form}
-          name="register"
-          initialValues={dataSelectedRowKey}
+          name="form-user"
+          initialValues={{}}
           scrollToFirstError
           {...formItemLayout}
         >
+          <Form.Item name="key" hidden>
+            <CommonInput />
+          </Form.Item>
+          <Form.Item name="createTime" hidden>
+            <CommonInput />
+          </Form.Item>
           <Form.Item
             name="name"
             label="Name"
             rules={[
               {
                 required: true,
-                message: "Please input your name!",
+                message: "Please input employee name!",
+              },
+            ]}
+          >
+            <CommonInput />
+          </Form.Item>
+          <Form.Item name="nickName" label="NickName">
+            <CommonInput />
+          </Form.Item>
+          <Form.Item
+            name="age"
+            label="Age"
+            rules={[
+              {
+                type: "number",
+                required: true,
+                message: "Please input employee age!",
+              },
+            ]}
+          >
+            <InputNumber min={0} max={100} />
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Address"
+            rules={[
+              {
+                required: true,
+                message: "Please input employee address!",
               },
             ]}
           >
             <CommonInput />
           </Form.Item>
           <Form.Item
-            name="nickname"
-            label="NickName"
+            name="email"
+            label="Email"
             rules={[
               {
-                required: true,
-                message: "Please input your Nick Name!",
+                type: "email",
+                message: "The input is not valid E-mail!",
               },
-            ]}
-          >
-            <CommonInput />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title="Create User"
-        open={isModalEdit}
-        onCancel={handleCancelEdit}
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              onCreate(values);
-            })
-            .catch((info) => {
-              console.log("Validate Failed:", info);
-            });
-        }}
-      >
-        <Form
-          form={form}
-          name="register"
-          initialValues={dataSelectedRowKey}
-          scrollToFirstError
-          {...formItemLayout}
-        >
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[
               {
                 required: true,
-                message: "Please input your name!",
+                message: "Please input your E-mail!",
               },
             ]}
           >
             <CommonInput />
           </Form.Item>
           <Form.Item
-            name="nickname"
-            label="NickName"
+            name="gender"
+            label="Gender"
             rules={[
               {
                 required: true,
-                message: "Please input your Nick Name!",
+                message: "Please choose employee gender!",
               },
             ]}
           >
-            <CommonInput />
+            <Radio.Group name="radiogroup">
+              <Radio value="male">male</Radio>
+              <Radio value="female">female</Radio>
+            </Radio.Group>
           </Form.Item>
         </Form>
       </Modal>
@@ -305,9 +367,9 @@ function User() {
             <Popconfirm
               title="Are you sure delete these items?"
               placement="left"
-              onConfirm={start}
+              onConfirm={handleDeleteListUser}
               okText="OK"
-              cancelText="No"
+              cancelText="Cancel"
             >
               <CommonButton type="primary">Remove</CommonButton>
             </Popconfirm>
@@ -318,7 +380,7 @@ function User() {
         loading={loading}
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={data}
+        dataSource={dataUser}
         pagination={{ showQuickJumper: true }}
       />
     </div>

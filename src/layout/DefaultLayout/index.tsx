@@ -2,10 +2,10 @@ import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import classNames from "classnames/bind";
 import BreadCrumb from "../../components/BreadCrumb";
-import style from "./index.module.scss";
 import Header from "../Header";
 import Footer from "../Footer";
 import SideBar from "../SideBar";
+import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
 const { Content } = Layout;

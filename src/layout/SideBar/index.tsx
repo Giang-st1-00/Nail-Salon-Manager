@@ -1,6 +1,5 @@
-import { Layout, Menu, Typography, Switch } from "antd";
-import type { MenuProps } from "antd";
-import { Link, useLocation } from "react-router-dom";
+import { Layout, Menu, Switch } from "antd";
+import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 import images from "../../assets/images";
@@ -9,11 +8,7 @@ import sideBarList from "./configSideBar";
 const cx = classNames.bind(style);
 const { Sider } = Layout;
 
-const SubMenu = Menu.SubMenu;
 function SideBar() {
-  let location = useLocation();
-  console.log(location);
-
   return (
     // dark light
     <Sider width={256} theme="light" trigger={null}>

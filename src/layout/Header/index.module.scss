@@ -4,5 +4,116 @@
   right: 0;
   width: calc(100% - var(--sidebar-width));
   height: var(--header-height);
-  background-color: #ccc;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+
+  .menuFoldOutlined {
+    height: 100%;
+    padding: 0 27px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease-out;
+    .menuIcon {
+      font-size: 20px;
+    }
+  }
+  .menuFoldOutlined:hover {
+    background-color: #f9f9fc;
+    cursor: pointer;
+    color: #21b6ff;
+  }
+  .rightContainer {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .bellOutlined {
+      display: flex;
+      padding: 0;
+      align-items: center;
+      width: 48px;
+      height: 100%;
+      margin-left: 70px;
+      clear: both;
+      white-space: nowrap;
+      .avatar {
+        background-color: #fff;
+        font-size: 24px;
+        color: #b2b0c7;
+        border-radius: 50px;
+        transition: all 0.3s ease-out;
+      }
+    }
+    .bellOutlined:hover .avatar {
+      background-color: #f9f9fc;
+      color: #21b6ff;
+      cursor: pointer;
+    }
+    .languages {
+      margin: 0;
+      padding: 0 20px;
+      height: 100%;
+      // border-radius: 50px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease-out;
+      .subMenu {
+        padding: 0;
+        img {
+          margin: 0;
+        }
+      }
+      .menuItem {
+        margin: 4px 0 8px;
+        padding: 0 16px;
+      }
+    }
+    .languages:hover {
+      background-color: #f9f9fc;
+    }
+    .menu-overflow {
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      height: 100%;
+      transition: all 0.3s ease-out;
+      .avatar {
+        margin: 0 0 0 8px;
+      }
+    }
+    .menu-overflow:hover {
+      background-color: #f9f9fc;
+    }
+  }
+}
+
+.contentBell {
+  padding: 12px 0;
+  width: 320px;
+  .element {
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .element:hover {
+    background-color: #f9f9fc;
+  }
+  .arrow {
+    display: flex;
+    align-items: center;
+  }
+  .done {
+    margin: 0;
+    text-align: center;
+    padding: 10px 0;
+  }
+  .done:hover {
+    background-color: #f9f9fc;
+  }
+}
+
+img {
+  margin: 0 10px;
+  border-radius: 50px;
 }

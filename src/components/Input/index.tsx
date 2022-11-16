@@ -10,6 +10,7 @@ type TInputProps = {
   allowClear?: boolean;
   suffix?: React.ReactNode;
   search?: boolean;
+  onSearch?: () => void;
   className?: any;
 } & InputProps;
 
@@ -18,6 +19,7 @@ function CommonInput({
   allowClear,
   suffix,
   search,
+  onSearch,
   className,
   ...props
 }: TInputProps) {
@@ -27,6 +29,7 @@ function CommonInput({
   });
   return (
     <Component
+      onSearch={onSearch}
       className={classes}
       placeholder={placeholder}
       allowClear={allowClear}
