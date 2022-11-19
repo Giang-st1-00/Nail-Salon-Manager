@@ -1,29 +1,23 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
-
-const jobListSelector = (state: RootState) => state.job;
-const searchSelector = (state: RootState) => state.search;
-
-export const remainingJob = createSelector(
+const jobListSelector = (state: RootState) => state.jobSlice.dataJob;
+const filterJobSelector = (state : RootState) => state.jobSlice.filter;
+const remainingJob = createSelector(
   jobListSelector,
-  searchSelector,
-  (jobList,  value : any) => {
-    let newValue: any = [];
-    if (value.valueSearch == "" && value.valueDate == "") {
-      return jobList;
-    }
-    if (value.valueSearch == "" && value.valueDate != "") {
-      jobList.map((job : any) => {
-        
+  filterJobSelector,
+  (jobList,  filter) => {
+    const remainingJob = jobList.filter((job) => {
+      let isCheckDate = true;
+      if (filter.date[0] && filter.date[1]) {
+        const endDate = new Date(filter.date[1]);
+        const startDate = new Date(filter.date[0]);
+        if (!(job.time > startDate && job.time < endDate)) 
+          isCheckDate = false;
+      }
+      return job.nameJob.includes(filter.name) && isCheckDate;
     })
-      return jobList;
-    }
-    jobList.map((job : any) => {
-        if (job.nameJob?.includes(value.valueSearch)) {
-          newValue.push(job);
-        }
-    })
-    return newValue;
+    return remainingJob;
   }
 );
 
+export default remainingJob;

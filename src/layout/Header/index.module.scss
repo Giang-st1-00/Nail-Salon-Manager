@@ -9,20 +9,30 @@
   align-items: center;
   justify-content: space-between;
   font-size: 20px;
-  .toggle_sideBar{
+
+  .toggle_sideBar {
+    height: 100%;
+    padding: 0 27px;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 72px;
     height: 72px;
     transition: all .3s ease-out;
+    transition: all 0.3s ease-out;
+    .menuIcon {
+      font-size: 20px;
+    } 
+  }
+  .menuFoldOutlined:hover {
+    background-color: #f9f9fc;
     cursor: pointer;
   }
   .toggle_sideBar:hover {
     background-color: #f9f9fc;
     color: #21b6ff;
   }
-  .action{
+  .action {
     height: 100%;
     display: flex;
     justify-content: center;
@@ -33,6 +43,24 @@
       font-size: 24px;
     }
     .notification:hover .avatar{
+    .bellOutlined {
+      display: flex;
+      padding: 0;
+      align-items: center;
+      width: 48px;
+      height: 100%;
+      margin-left: 70px;
+      clear: both;
+      white-space: nowrap;
+      .avatar {
+        background-color: #fff;
+        font-size: 24px;
+        color: #b2b0c7;
+        border-radius: 50px;
+        transition: all 0.3s ease-out;
+      }
+    }
+    .bellOutlined:hover .avatar {
       background-color: #f9f9fc;
       color: #21b6ff;
       cursor: pointer;
@@ -40,25 +68,35 @@
     .languages{
       padding: 0 20px;
       transition: all .3s ease-out;
+    .languages {
+      margin: 0;
+      padding: 0 20px;
+      height: 100%;
+      // border-radius: 50px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease-out;
       .subMenu {
-        padding : 0;
+        padding: 0;
         img {
-          margin : 0;
+          margin: 0;
         }
       }
       .menuItem {
         margin: 4px 0 8px;
-        padding: 0 16px; 
-       
+        padding: 0 16px;
       }
     }
-    .languages:hover{
+    .languages:hover {
       background-color: #f9f9fc;
     }
     .account {
       padding: 0 10px;
       transition: all .3s ease-out;
       .avatar{
+      height: 100%;
+      transition: all 0.3s ease-out;
+      .avatar {
         margin: 0 0 0 8px;
       }
     }
@@ -67,8 +105,10 @@
     }
   }
 }
+  }
 
 .notification-list{
+.contentBell {
   padding: 12px 0;
   width: 320px;
   .notification-item {
@@ -88,13 +128,10 @@
     background-color: #f9f9fc;
   }
 }
-
-img { 
+}
+  }
+img {
   margin: 0 10px;
   border-radius: 50px;
 }
-
-
-
-
-
+}

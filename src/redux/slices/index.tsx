@@ -1,2 +1,4 @@
-export * from './job/search'
-export * from './job'
+
+export { default as userSlice } from "./user";
+export { default as jobSlice } from "./job";
+

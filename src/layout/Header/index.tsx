@@ -6,6 +6,7 @@ import {
   Menu,
   MenuProps,
   Popover,
+  Button,
 } from "antd";
 import {
   RightOutlined,
@@ -66,7 +67,6 @@ function Header() {
       </div>
     </div>
   );
-
   return (
     <div className={cx("wrapper")}>
       <div className={cx("toggle_sideBar")}>
@@ -74,6 +74,7 @@ function Header() {
       </div>
       <div className={cx("action")}>
         <Popover
+          className={cx("bellOutlined")}
           trigger={"click"}
           placement="bottomLeft"
           content={notification}
@@ -88,6 +89,7 @@ function Header() {
                   />
                 </Badge>
               </span>
+          
         </Popover>
 
         <Menu className={cx("languages")} mode="horizontal">

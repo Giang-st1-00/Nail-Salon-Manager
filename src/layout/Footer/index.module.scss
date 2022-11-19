@@ -1,9 +1,8 @@
 .wrapper {
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 1.3rem;
   text-align: center;
-  background: #fff;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 24px;
-  padding-bottom: 24px;
-  min-height: 72px;
+  background-color: #fff;
+  height: var(--footer-height);
+  padding: 24px 0;
 }

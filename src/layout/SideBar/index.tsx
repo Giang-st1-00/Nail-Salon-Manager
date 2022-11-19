@@ -1,5 +1,4 @@
-import { Layout, Menu, Typography, Switch } from "antd";
-import type { MenuProps } from "antd";
+import { Layout, Menu, Switch } from "antd";
 import { Link } from "react-router-dom";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
@@ -9,7 +8,6 @@ import sideBarList from "./configSideBar";
 const cx = classNames.bind(style);
 const { Sider } = Layout;
 
-const SubMenu = Menu.SubMenu;
 function SideBar() {
   return (
     // dark light
@@ -23,7 +21,7 @@ function SideBar() {
           className={cx("menu")}
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          // defaultSelectedKeys={["1"]}
         >
           {sideBarList.map((item) => (
             <Menu.Item key={item.key} icon={item.icon}>

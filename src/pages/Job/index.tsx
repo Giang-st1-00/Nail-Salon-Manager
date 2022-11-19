@@ -1,97 +1,132 @@
+import React from 'react';
 import {
-  Avatar,
-  Cascader,
   Col,
   Dropdown,
   Form,
-  MenuProps,
   Modal,
   Row,
-  Input as AntdInput,
-  DatePickerProps,
+  Input,
+  FormInstance,
+  DatePicker, Space, Button, MenuProps, Menu,
+  Cascader,
+  InputNumber,
 } from "antd";
 import classNames from "classnames/bind";
-import Button from "../../components/Button";
 import style from "./index.module.scss";
-import { DatePicker, Space, Button as AntdButton } from "antd";
-import type { RangePickerProps } from "antd/es/date-picker";
-import moment from "moment";
 import { Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
-  UnorderedListOutlined,
   DownOutlined,
-  UserOutlined,
+  BarsOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
-import { useState } from "react";
-import { IJob } from "../../model";
-import { removeJob, updateJob } from "../../redux/slices/job";
+import { useRef, useState } from "react";
+import { IFilter, IJob, IUser } from "../../model";
 import { useDispatch, useSelector } from "react-redux";
-import { updateAllSearch, updateNameJob  } from "../../redux/slices/job/search";
-import { remainingJob } from "../../redux/selectors/job";
-
-
-
+import remainingJob from "../../redux/selectors/job";
+import { addJob, changeStatus, deleteJob, editJob } from "../../redux/slices/job";
+import CommonButton from "../../components/Button";
+import { v4 as uuidv4 } from "uuid";
+import remainingUser from '../../redux/selectors/user';
+import Select from "rc-select";
 
 const cx = classNames.bind(style);
+const { confirm } = Modal;
+const { RangePicker } = DatePicker;
+
+interface Option {
+  value: string | number;
+  label: string;
+}
+
 function Job() {
   const dispatch = useDispatch();
-  const { RangePicker } = DatePicker;
+  const [form] = Form.useForm();
+  const formFilterRef = useRef<FormInstance>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUpdate, setSelectedUpdate] = useState<IJob>({});
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const dataJob: Array<IJob> = useSelector(remainingJob);
+  const dataUser: Array<IUser> = useSelector(remainingUser);
+  const { Option } = Select;
+  
+  const { Search } = Input;
 
-  const dataJob = useSelector(remainingJob);
-  const [nameSearch, setNameSearch] = useState("");
-  const [valueCalendar, setValueCalendar] = useState("2022/01/01");
-  const { Search } = AntdInput;
+  const options: Option[] = dataUser.map((item,index) => {
+    return {
+      label : `${item.name}`,
+      value : `${item.name}`,
+    }
+  })
 
-  const dateFormat = 'YYYY/MM/DD';
+  const handleFilter = (values: IFilter) => {
+    if (values.name || values.date) {
+      const name = values.name ? values.name : "";
+      const date = values.date
+        ? [values.date[0].toLocaleString(), values.date[1].toLocaleString()]
+        : ["", ""];
+      dispatch(
+        changeStatus({
+          name,
+          date,
+        })
+      );
+    }
+  };
 
-  const items: MenuProps["items"] = [
+  const itemsActionRow = [
+    { key: "edit", label: "Update" },
     {
-      label: (
-        <div
-          onClick={(e) => {
-            console.log(selectedUpdate);
-            setIsModalOpen(true);
-          }}
-        >
-          Update
-        </div>
-      ),
-      key: "1",
-    },
-    {
-      label: (
-        <div
-          onClick={() => {
-            dispatch(removeJob(selectedUpdate));
-          }}
-        >
-          Delete
-        </div>
-      ),
-      key: "2",
+      key: "delete",
+      label: "Delete",
     },
   ];
 
-  const submitDataJob = () => {
-    dispatch(updateJob(selectedUpdate));
+  const showModalCreate = () => {
+    form.resetFields();
+    setIsModalOpen(true);
+  };
+
+  const getUserByName = (nameEmployee : string) => {
+    let userSelected = dataUser.find((user) => user.name == nameEmployee)
+    return userSelected;
+  };
+
+  const handleSubmitDataJob = (job: IJob) => {
+    if (job.key) {
+      let userSelected = getUserByName(job.nameEmployee);
+      if (userSelected) {
+        dispatch(editJob({ ...job, nameEmployee : userSelected.name , idEmployee : userSelected.key}));
+      }
+    } else {
+      const newJob: IJob = {
+        ...job,
+        time: new Date(),
+        key: uuidv4(),
+      };
+      dispatch(addJob(newJob));
+    }
     setIsModalOpen(false);
   };
 
+  const showConfirmDeleteUSer = (key: string) => {
+    confirm({
+      title: "Are you sure delete this record?",
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        dispatch(deleteJob(key));
+      },
+      onCancel() {},
+    });
+  };
 
- 
+  const handleMenuRowClick = (key: string, record: IJob) => {
+    form.setFieldsValue({...record , time : record.time.toLocaleString()});
+    key === "edit" ? setIsModalOpen(true) : showConfirmDeleteUSer(record.key);
+  };
+
   //--------------------------------TABLE---------------------------------
   const columns: ColumnsType<IJob> = [
-    {
-      title: "ID",
-      width: 30,
-      dataIndex: "id",
-      key: "id",
-      fixed: "left",
-      align: "center",
-    },
     {
       title: "Name Job",
       width: 70,
@@ -106,24 +141,13 @@ function Job() {
       key: "description",
     },
     {
-      title: "Date",
+      title: "Time",
       width: 50,
-      dataIndex: "date",
-      key: "date",
-    },
-    {
-      title: "ID Employee",
-      width: 50,
-      dataIndex: "idEmployee",
-      key: "idEmployee",
-      align: "center",
-    },
-    {
-      title: "Avatar",
-      dataIndex: "avatar",
-      key: "avatar",
-      align: "center",
-      width: 40,
+      dataIndex: "time",
+      key: "time",
+      render: (date: Date) => {
+        return date.toLocaleString();
+      },
     },
     {
       title: "Name Employee",
@@ -132,13 +156,6 @@ function Job() {
       width: 80,
     },
 
-    {
-      title: "ID Product",
-      dataIndex: "idProduct",
-      key: "idProduct",
-      width: 50,
-      align: "center",
-    },
     {
       title: "Name Product",
       dataIndex: "nameProduct",
@@ -175,184 +192,188 @@ function Job() {
     },
     {
       title: "Customer Pay",
-      dataIndex: "customer",
+      dataIndex: "customerPay",
       key: "customerPay",
       width: 80,
       align: "center",
     },
 
     {
-      title: "Operation",
-      width: 50,
-      dataIndex: "operation",
-      key: "operation",
+      title: "Action",
       fixed: "right",
+      dataIndex: "operation",
+      width: 50,
+      key: "operation",
+      render: (text: string, record: IJob) => (
+        <Dropdown
+          menu={{
+            items: itemsActionRow,
+            onClick: ({ key }) => {
+              handleMenuRowClick(key, record);
+            }
+          }}
+        >
+          <CommonButton className={cx("no-border")}>
+            <BarsOutlined />
+            <DownOutlined />
+          </CommonButton>
+        </Dropdown>
+      ),
     },
   ];
 
-  const data: IJob[] = [];
+  const handleResetForm = () => {
+    setLoading(true);
 
-  dataJob.map((item: any, index: any) => {
-    data.push({
-      id: item.id,
-      nameJob: `${item.nameJob}`,
-      description: `${item.description}`,
-      date: `${item.date}`,
-
-      idEmployee: item.idEmployee,
-      nameEmployee: `${item.nameEmployee}`,
-      avatar: <Avatar icon={<UserOutlined />} />,
-
-      idProduct: item.idProduct,
-      nameProduct: `${item.nameProduct}`,
-      quantityProduct: item.quantityProduct,
-      priceProduct: item.priceProduct,
-
-      nameCustomer: `${item.nameCustomer}`,
-      customerPay: item.customerPay,
-      colorProduct: `${item.colorProduct}`,
-
-      operation: (
-        <Dropdown menu={{ items }}>
-          <AntdButton
-            onMouseEnter={() => {
-              setSelectedUpdate({
-                id: item.id,
-                nameJob: `${item.nameJob}`,
-                description: `${item.description}`,
-                date: `${item.date}`,
-              });
-            }}
-          >
-            <UnorderedListOutlined />
-            <DownOutlined />
-          </AntdButton>
-        </Dropdown>
-      ),
-    });
-  });
+    setTimeout(() => {
+      dispatch(
+        changeStatus({
+          name: "",
+          date: ["", ""],
+        })
+      );
+      formFilterRef.current?.resetFields();
+      setLoading(false);
+    }, 500);
+  };
 
   const rowSelection = {
-    getCheckboxProps: (record: IJob) => ({
-      disabled: record.nameJob === "Disabled Job",
-      name: record.nameJob,
-    }),
+    selectedRowKeys,
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(selectedRowKeys);
+    },
   };
 
   return (
     <div className={cx("contentInner")}>
-      <Form className={cx("toolBar")}>
-        <Row>
+      <Form
+        className={cx("toolBar")}
+        name="filter-job"
+        layout="horizontal"
+        ref={formFilterRef}
+        onFinish={handleFilter}
+      >
+        <Row gutter={[24, 24]}>
           <Col span={6}>
-            <Search
-              value={nameSearch}
-              onChange={(e) => {
-                setNameSearch(e.target.value);
-              }}
-              placeholder="Search Name Job ."
-              className={cx("search_nameJob")}
-              onSearch={() => {
-                dispatch(updateNameJob(nameSearch));
-              }}
-            ></Search>
+            <Form.Item name="name" shouldUpdate>
+              <Search
+                placeholder="Search Name Job ."
+                onSearch={() => formFilterRef.current?.submit()}
+              ></Search>
+            </Form.Item>
           </Col>
           <Col span={8}>
-            <span className={cx("label_timeInput")}>CreateTime</span>
-            <Space direction="vertical">
-              <DatePicker
-                value={moment(`${valueCalendar}`, dateFormat)}
-                onChange={(date : any, dateString : any) => {
-                  setValueCalendar(dateString);
-                }}
-              />
-            </Space>
+            <Form.Item
+              name="date"
+              valuePropName="date"
+              label="CreateTime"
+              colon={false}
+            >
+              <RangePicker />
+            </Form.Item>
           </Col>
           <Col span={9}>
-            <Row className={cx("feature")}>
-              <div className={cx('syntheticSearch')}>
-                <AntdButton type="primary" onClick={() => {
-                  dispatch(updateAllSearch({valuesearch : nameSearch, valueDate : valueCalendar}));
-                }}>Search</AntdButton>
-                <AntdButton type="default">Reset</AntdButton>
-              </div>
-              <AntdButton
-                type="default"
-                onClick={() => {
-                  setSelectedUpdate({});
-                  setIsModalOpen(true);
-                }}
-              >
-                Create
-              </AntdButton>
-            </Row>
+              <Row gutter={[16,16]}>
+              <Col span={4}>
+                <Form.Item shouldUpdate>
+                    <CommonButton type="primary" htmlType="submit">
+                      Search
+                    </CommonButton>
+                </Form.Item>
+              </Col>
+              <Col span={4} offset={2}>
+                <Form.Item shouldUpdate>
+                    <CommonButton type="default" onClick={handleResetForm}>
+                      Reset
+                    </CommonButton>
+                </Form.Item>
+              </Col>
+              <Col span={4} offset={10}>
+                <CommonButton type="default" onClick={showModalCreate}>
+                  Create
+                </CommonButton>
+              </Col>
+              </Row>
           </Col>
         </Row>
       </Form>
 
       <Table
         className={cx("tableJob")}
-        rowSelection={{
-          type: "checkbox",
-          ...rowSelection,
-        }}
+        loading={loading}
+        rowSelection={rowSelection}
         columns={columns}
-        dataSource={data}
-        scroll={{ x: 2300, y: 600 }}
+        dataSource={dataJob}
+        scroll={{ x: 2000, y: 600 }}
       />
 
       <Modal
         className={cx("modalUpdate")}
         title="Update Job"
         open={isModalOpen}
-        onOk={submitDataJob}
+        onOk={() => {
+          form
+            .validateFields()
+              .then((values) => {
+                handleSubmitDataJob(values);
+              })
+              .catch((info) => {
+                console.log("Validate Failed:", info);
+              });
+        }}
         onCancel={() =>  setIsModalOpen(false)}
       >
         <Form
+          form={form}
           className={cx("control")}
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 14 }}
+          labelCol={{ span: 6 }}
+          wrapperCol={{ span: 12 }}
           layout="horizontal"
         >
-          <Form.Item label="ID Job">
-            <AntdInput value={`${selectedUpdate.id}`} disabled />
+          <Form.Item name="key" hidden>
+            <Input />
           </Form.Item>
-          <Form.Item
-            rules={[{ required: true, message: "Please input your name!" }]}
+
+          <Form.Item name="nameJob"
             label="Name Job"
+            rules={[{ required: true, message: "Please input your name!" }]}
           >
-            <AntdInput
-              value={`${selectedUpdate.nameJob}`}
-              onChange={(e) =>
-                setSelectedUpdate((state) => ({
-                  ...state,
-                  nameJob: `${e.target.value}`,
-                }))
-              }
-            />
+            <Input />
           </Form.Item>
 
-          <Form.Item label="Description">
-            <AntdInput
-              value={`${selectedUpdate.description}`}
-              onChange={(e) =>
-                setSelectedUpdate((state) => ({
-                  ...state,
-                  description: `${e.target.value}`,
-                }))
-              }
-            />
+          <Form.Item name="description" label="Description" rules={[{ required: true, message: "Please input description!" }]}>
+            <Input />
           </Form.Item>
 
-          <Form.Item label="Date">
-            <AntdInput
-              value={`${selectedUpdate.date}`}
-              onChange={(e) =>
-                setSelectedUpdate((state) => ({
-                  ...state,
-                  date: `${e.target.value}`,
-                }))
-              }
-            />
+          <Form.Item name="time" label="Time">
+            <Input disabled/>
+          </Form.Item>
+
+          <Form.Item name="idEmployee" hidden>
+          </Form.Item>
+
+          <Form.Item name="nameEmployee" label="Name Employee" rules={[{ required: true }]}>
+            <Cascader options={options} placeholder="Please select" />
+          </Form.Item>
+
+          <Form.Item name="nameProduct" hidden>
+          </Form.Item>
+
+          <Form.Item name="quantityProduct" hidden>
+          </Form.Item>
+
+          <Form.Item name="priceProduct" hidden>
+          </Form.Item>
+
+          <Form.Item name="colorProduct" hidden>
+          </Form.Item>
+
+          <Form.Item name="nameCustomer" label="Name Customer" rules={[{ required: true }]}>
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="customerPay" label="Pay" rules={[{ required: true }]}>
+            <InputNumber />
           </Form.Item>
         </Form>
       </Modal>

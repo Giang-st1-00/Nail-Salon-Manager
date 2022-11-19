@@ -1,21 +1,15 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import jobReducer from '../slices/job';
-import searchSlice from '../slices/job/search';
+import { configureStore } from '@reduxjs/toolkit';
+import { userSlice,jobSlice } from "../slices";
 
 export const store = configureStore({
   reducer: {
-    job: jobReducer,
-    search : searchSlice,
+    jobSlice,
+    userSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
-
-export type jobDispatch = typeof store.dispatch;
-
 export type RootState = ReturnType<typeof store.getState>;
-
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export default store;

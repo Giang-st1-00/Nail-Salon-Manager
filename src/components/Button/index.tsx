@@ -1,48 +1,56 @@
-import { Button as AntdButton } from "antd";
+import { Button } from "antd";
+import { ButtonProps } from "antd/lib/button";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
-type TButtonProps = {
-  children?: string;
-  Icon?: React.ReactNode;
-  type?:
-    | "primary"
-    | "link"
-    | "text"
-    | "ghost"
-    | "default"
-    | "dashed"
-    | undefined;
+type TCommonButtonProps = {
+  children?: string | React.ReactNode;
+  icon?: React.ReactNode;
+  type?: "primary" | "link" | "text" | "ghost" | "default" | "dashed";
   size?: "large" | "middle" | "small";
+  htmlType?: "button" | "submit" | "reset";
   shape?: "default" | "circle" | "round";
+  disabled?: boolean;
+  border?: boolean;
+  loading?: boolean;
+  ghost?: boolean;
   className?: any;
-};
+  onClick?: () => void;
+} & ButtonProps;
 
-function Button({
+function CommonButton({
   children,
-  Icon,
-  type = "primary",
+  icon,
+  type,
   size = "middle",
   shape = "default",
   className,
-}: TButtonProps) {
-  const classes = cx("wrapper", {
+  htmlType,
+  border = true,
+  onClick,
+  ...props
+}: TCommonButtonProps) {
+  const classes = cx("btn", {
+    "no-border": !border,
     [className]: className,
   });
   return (
     <div className={cx("wrapper")}>
-      <AntdButton
-        className={classes}
+      <Button
         shape={shape}
         size={size}
-        icon={Icon}
+        className={classes}
+        icon={icon}
         type={type}
+        htmlType={htmlType}
+        onClick={onClick}
+        {...props}
       >
         {children}
-      </AntdButton>
+      </Button>
     </div>
   );
 }
 
-export default Button;
+export default CommonButton;
