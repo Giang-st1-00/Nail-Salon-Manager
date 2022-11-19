@@ -1,5 +1,9 @@
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
+import { useSelector, useDispatch } from "react-redux";
+
+import { toggleCollapsed } from "../../redux/slices/activeUser";
+import { collapsedSelector } from "../../redux/selector/activeUser";
 import {
   Avatar,
   Badge,
@@ -17,6 +21,11 @@ import {
 
 const cx = classNames.bind(style);
 function Header() {
+  const dispatch = useDispatch();
+  const collapsed = useSelector(collapsedSelector);
+  const handleToggleCollapsed = () => {
+    dispatch(toggleCollapsed(!collapsed));
+  };
   const elementBellData = [
     {
       content: "New User is registered",
@@ -49,9 +58,8 @@ function Header() {
             key: `${index}`,
           },
         ];
-
         return (
-          <div className={cx("element")}>
+          <div className={cx("element")} key={index}>
             <div>
               <Dropdown menu={{ items }} placement="top" arrow>
                 <h4>{element.content}</h4>
@@ -71,8 +79,12 @@ function Header() {
     </div>
   );
   return (
-    <div className={cx("wrapper")}>
-      <div className={cx("menuFoldOutlined")}>
+    <div
+      className={cx("wrapper", {
+        collapsed,
+      })}
+    >
+      <div className={cx("menuFoldOutlined")} onClick={handleToggleCollapsed}>
         <MenuFoldOutlined className={cx("menuIcon")} />
       </div>
       <div className={cx("rightContainer")}>

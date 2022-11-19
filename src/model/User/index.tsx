@@ -8,7 +8,3 @@ export interface IUser {
   gender: "male" | "female";
   createTime: Date;
 }
-export interface IFilter {
-  name: string;
-  date: Array<string>;
-}

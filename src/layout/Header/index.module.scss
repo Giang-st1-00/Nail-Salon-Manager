@@ -7,7 +7,9 @@
   background-color: #fff;
   display: flex;
   justify-content: space-between;
-
+  &.collapsed {
+    width: calc(100% - 80px);
+  }
   .menuFoldOutlined {
     height: 100%;
     padding: 0 27px;
@@ -113,7 +115,7 @@
   }
 }
 
-img {
-  margin: 0 10px;
-  border-radius: 50px;
-}
+// img {
+//   margin: 0 10px;
+//   border-radius: 50px;
+// }

@@ -1,9 +1,6 @@
-.wrapper {
-  display: inline-block;
-  .no-border {
-    border: none;
-  }
-  .btn + .btn {
-    margin-left: 16px;
-  }
+.no-border {
+  border: none;
+}
+.btn + .btn {
+  margin-left: 16px;
 }
