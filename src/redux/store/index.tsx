@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userSlice } from "../slices";
+import { userSlice, productSlice, activeUser } from "../slices";
 const store = configureStore({
   reducer: {
     userSlice,
+    productSlice,
+    activeUser,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

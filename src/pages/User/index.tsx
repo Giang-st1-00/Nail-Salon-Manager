@@ -10,6 +10,7 @@ import {
   Dropdown,
   Radio,
   InputNumber,
+  Cascader,
 } from "antd";
 import type { FormInstance } from "antd/es/form";
 import {
@@ -24,7 +25,7 @@ import classNames from "classnames/bind";
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
 import { IUser, IFilter } from "../../model";
-import { remainingUser } from "../../redux/selection";
+import { remainingUser } from "../../redux/selector";
 
 import {
   addUser,
@@ -38,6 +39,7 @@ import style from "./index.module.scss";
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
 const { confirm } = Modal;
+
 function User() {
   const [form] = Form.useForm();
   const formFilterRef = useRef<FormInstance>(null);
@@ -46,7 +48,6 @@ function User() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const dataUser: Array<IUser> = useSelector(remainingUser);
-
   const dispatch = useDispatch();
 
   const itemsActionRow = [
@@ -116,7 +117,6 @@ function User() {
       ),
     },
   ];
-
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -141,7 +141,6 @@ function User() {
 
   const handleResetForm = () => {
     setLoading(true);
-
     setTimeout(() => {
       dispatch(
         changeStatus({
@@ -197,6 +196,7 @@ function User() {
     form.setFieldsValue(record);
     key === "edit" ? setIsModal(true) : showConfirmDeleteUSer(record.key);
   };
+
   return (
     <div>
       <Form
