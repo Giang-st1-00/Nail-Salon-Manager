@@ -43,4 +43,4 @@ Hiển thị thông tin bao gồm:\
 +Xóa sản phẩm theo danh sách đã chọn\
 +Xem thống kế tất cả sản phẩm đã nhập(Tổng giá sản phẩm đã nhập)\
 +Xem thống kế tất cả sản phẩm sử dụng(Tổng giá sản phẩm đã sử dụng)\
-+Phân trang\
++Phân trang
