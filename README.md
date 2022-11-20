@@ -3,7 +3,7 @@ tech using in project :\
 uuid, typescript, className\
 link deploy: https://manager-nail.web.app/\
 Description:\
-App gồm 4 trang:\
+App gồm 5 trang:\
 ---DashBoard:\
 Hiển thị thông tin bao gồm:\
 +Số lượng user\
