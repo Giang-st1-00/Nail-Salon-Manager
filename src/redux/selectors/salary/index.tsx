@@ -1,15 +1,15 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { IJob, IUser } from "../../../model";
 import { RootState } from "../../store";
+import { INTEREST } from "../../../constants";
 const userSelector = (state: RootState) => state.userSlice.dataUser;
 const jobSelector = (state: RootState) => state.jobSlice.dataJob;
 
 const filterJobSelector = (state: RootState) => state.salarySlice.filter;
-const remainingSalary = createSelector(
-  userSelector,
+const managerSalary = createSelector(
   jobSelector,
   filterJobSelector,
-  (users, jobs, filter) => {
+  (jobs, filter) => {
     const filterJob = jobs.filter((job) => {
       let isCheckDate = true;
       if (filter.date[0] && filter.date[1]) {
@@ -29,7 +29,13 @@ const remainingSalary = createSelector(
       },
       {}
     );
-
+    return managerSalary;
+  }
+);
+const remainingSalary = createSelector(
+  managerSalary,
+  userSelector,
+  (managerSalary, users) => {
     const receiveSalary: any = users.map((user: IUser) => {
       return {
         key: user.key,
@@ -45,4 +51,15 @@ const remainingSalary = createSelector(
     return remainingSalary;
   }
 );
-export default remainingSalary;
+const interestRate = createSelector(
+  managerSalary,
+  userSelector,
+  (managerSalary, users) => {
+    let interestRate = users.reduce((accumulatorInterestRate, currentItem) => {
+      return accumulatorInterestRate + (managerSalary[currentItem.key] || 0);
+    }, 0);
+    interestRate = (interestRate * INTEREST) / 100;
+    return interestRate;
+  }
+);
+export { remainingSalary, interestRate };

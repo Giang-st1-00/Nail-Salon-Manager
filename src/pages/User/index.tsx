@@ -10,7 +10,7 @@ import {
   Dropdown,
   Radio,
   InputNumber,
-  Cascader,
+  Input,
 } from "antd";
 import type { FormInstance } from "antd/es/form";
 import {
@@ -36,6 +36,7 @@ import {
 } from "../../redux/slices/user";
 import style from "./index.module.scss";
 
+const { Search } = Input;
 const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
 const { confirm } = Modal;
@@ -169,8 +170,6 @@ function User() {
         createTime: new Date(),
         key: uuidv4(),
       };
-      console.log(newUser);
-
       dispatch(addUser(newUser));
     }
     setIsModal(false);
@@ -212,8 +211,7 @@ function User() {
         <Row gutter={[24, 24]}>
           <Col span={7}>
             <Form.Item name="name" shouldUpdate>
-              <CommonInput
-                search
+              <Search
                 placeholder="Search Name"
                 onSearch={() => formFilterRef.current?.submit()}
               />

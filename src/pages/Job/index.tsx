@@ -36,7 +36,6 @@ import {
   remainingUser,
   remainingJob,
 } from "../../redux/selectors";
-import { useProduct } from "../../redux/slices/product";
 
 const cx = classNames.bind(style);
 const { confirm } = Modal;
@@ -61,7 +60,6 @@ function Job() {
   const { Search } = Input;
   const [maxQuantityProduct, setMaxQuantityProduct] = useState<number>();
   const [quantityProduct, setQuantityProduct] = useState<number>(0);
-  const [keyProduct, setKeyProduct] = useState<string>("");
 
   const employeeOptions: Option[] = dataUser.map((item, index) => {
     return {
@@ -135,7 +133,6 @@ function Job() {
           idEmployee: userSelected.key,
           nameProduct: productSelected.name,
           idProduct: productSelected.key,
-          quantityProduct: productSelected.remainingQuantity,
           priceProduct: productSelected.price,
           colorProduct: productSelected.color,
           countQuantityEdit,
@@ -150,7 +147,6 @@ function Job() {
         idEmployee: userSelected.key,
         nameProduct: productSelected.name,
         idProduct: productSelected.key,
-        quantityProduct: productSelected.remainingQuantity,
         priceProduct: productSelected.price,
         colorProduct: productSelected.color,
         time: new Date(),
@@ -174,7 +170,6 @@ function Job() {
 
   const handleMenuRowClick = (key: string, record: IJob) => {
     setQuantityProduct(record.quantityProduct);
-    setKeyProduct(record.idProduct);
     form.setFieldsValue({ ...record, time: record.time.toLocaleString() });
     key === "edit" ? setIsModalOpen(true) : showConfirmDeleteUSer(record.key);
   };
@@ -194,7 +189,7 @@ function Job() {
       key: "description",
     },
     {
-      title: "Time",
+      title: "Time Create",
       width: 50,
       dataIndex: "time",
       key: "time",
@@ -403,8 +398,8 @@ function Job() {
             <Input />
           </Form.Item>
 
-          <Form.Item name="time" label="Time">
-            <Input disabled />
+          <Form.Item name="time" label="Time" hidden>
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -414,8 +409,6 @@ function Job() {
           >
             <Cascader options={employeeOptions} placeholder="Please select" />
           </Form.Item>
-
-          <Form.Item name="nameEmployee" hidden></Form.Item>
 
           <Form.Item
             name="idProduct"
@@ -431,15 +424,9 @@ function Job() {
             />
           </Form.Item>
 
-          <Form.Item name="nameProduct" hidden></Form.Item>
-
           <Form.Item name="quantityProduct" label="quantity">
             <InputNumber min={0} max={maxQuantityProduct} />
           </Form.Item>
-
-          <Form.Item name="priceProduct" hidden></Form.Item>
-
-          <Form.Item name="colorProduct" hidden></Form.Item>
 
           <Form.Item
             name="nameCustomer"

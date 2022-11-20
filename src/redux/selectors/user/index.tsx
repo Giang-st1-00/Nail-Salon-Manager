@@ -2,6 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 const userSelector = (state: RootState) => state.userSlice.dataUser;
 const filterUserSelector = (state: RootState) => state.userSlice.filter;
+
 const remainingUser = createSelector(
   userSelector,
   filterUserSelector,
@@ -19,4 +20,4 @@ const remainingUser = createSelector(
     return remainingUser;
   }
 );
-export default remainingUser;
+export { remainingUser, userSelector };

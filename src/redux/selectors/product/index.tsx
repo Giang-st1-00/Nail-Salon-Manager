@@ -19,4 +19,4 @@ const remainingProduct = createSelector(
     return remainingProduct;
   }
 );
-export default remainingProduct;
+export { remainingProduct, productSelector };

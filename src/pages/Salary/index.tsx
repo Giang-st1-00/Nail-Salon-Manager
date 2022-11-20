@@ -27,6 +27,9 @@ function Salary() {
       key: "salary",
       title: "Salary",
       dataIndex: "salary",
+      render: (salary: number) => {
+        return salary + "$";
+      },
     },
   ];
   const handleFilter = (values: IFilter) => {
@@ -70,7 +73,6 @@ function Salary() {
           <Col span={7}>
             <Form.Item name="name" shouldUpdate>
               <CommonInput
-                search
                 placeholder="Search Name"
                 onSearch={() => formFilterRef.current?.submit()}
               />

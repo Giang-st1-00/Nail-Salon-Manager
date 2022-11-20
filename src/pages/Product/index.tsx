@@ -57,6 +57,7 @@ function Product() {
     value: product.key,
     label: product.name + " - " + product.color,
   }));
+
   const itemsActRow = [
     { key: "edit", label: "Update" },
     {
@@ -175,6 +176,50 @@ function Product() {
       },
     },
   ];
+  const itemTabsProduct = [
+    {
+      label: "Import Product",
+      key: "item-1",
+      children: (
+        <Table
+          loading={loading}
+          columns={columnImportProduct}
+          dataSource={dataProduct}
+          pagination={{ showQuickJumper: true }}
+          footer={() =>
+            "total price: " +
+            dataProduct.reduce((accumulatorQuantity, currentProduct) => {
+              return (accumulatorQuantity =
+                accumulatorQuantity +
+                currentProduct.importQuantity * currentProduct.price);
+            }, 0) +
+            "$"
+          }
+        />
+      ),
+    },
+    {
+      label: "Export Product",
+      key: "item-2",
+      children: (
+        <Table
+          loading={loading}
+          columns={columnExportProduct}
+          dataSource={dataProduct}
+          pagination={{ showQuickJumper: true }}
+          footer={() =>
+            "total price: " +
+            dataProduct.reduce((accumulatorQuantity, currentProduct) => {
+              return (accumulatorQuantity =
+                accumulatorQuantity +
+                currentProduct.exportQuantity * currentProduct.price);
+            }, 0) +
+            "$"
+          }
+        />
+      ),
+    },
+  ];
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -291,7 +336,6 @@ function Product() {
           <Col span={7}>
             <Form.Item name="name" shouldUpdate>
               <CommonInput
-                search
                 placeholder="Search Name"
                 onSearch={() => formFilterRef.current?.submit()}
               />
@@ -520,42 +564,7 @@ function Product() {
         }}
         footer={null}
       >
-        <Tabs defaultActiveKey="1">
-          <Tabs.TabPane tab="Import Product" key="1">
-            <Table
-              loading={loading}
-              columns={columnImportProduct}
-              dataSource={dataProduct}
-              pagination={{ showQuickJumper: true }}
-              footer={() =>
-                "total price: " +
-                dataProduct.reduce((accumulatorQuantity, currentProduct) => {
-                  return (accumulatorQuantity =
-                    accumulatorQuantity +
-                    currentProduct.importQuantity * currentProduct.price);
-                }, 0) +
-                "$"
-              }
-            />
-          </Tabs.TabPane>
-          <Tabs.TabPane tab="Export Product" key="2">
-            <Table
-              loading={loading}
-              columns={columnExportProduct}
-              dataSource={dataProduct}
-              pagination={{ showQuickJumper: true }}
-              footer={() =>
-                "total price: " +
-                dataProduct.reduce((accumulatorQuantity, currentProduct) => {
-                  return (accumulatorQuantity =
-                    accumulatorQuantity +
-                    currentProduct.exportQuantity * currentProduct.price);
-                }, 0) +
-                "$"
-              }
-            />
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs defaultActiveKey="1" items={itemTabsProduct} />
       </Modal>
 
       <CommonButton onClick={handleShowStatistical}>statistical</CommonButton>

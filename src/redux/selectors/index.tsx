@@ -1,6 +1,6 @@
-export { default as remainingUser } from "./user";
-export { default as remainingSalary } from "./salary";
-export { default as remainingProduct } from "./product";
-export { default as remainingJob } from "./job";
+export { remainingUser, userSelector } from "./user";
+export { remainingSalary, interestRate } from "./salary";
+export { remainingProduct, productSelector } from "./product";
+export { remainingJob, jobSelector } from "./job";
 export { darkModeSelector } from "./activeUser";
 export { collapsedSelector } from "./activeUser";

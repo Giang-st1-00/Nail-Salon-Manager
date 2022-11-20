@@ -70,65 +70,7 @@ const initialState: JobState = {
     name: "",
     date: ["", ""],
   },
-  dataJob: [
-    {
-      key: "0",
-      nameJob: "nail polish",
-      description: "nail polish for customers",
-      time: new Date("2022-03-25"),
-
-      idEmployee: "1",
-      nameEmployee: "Tinh",
-
-      idProduct: "1",
-      quantityProduct: 2,
-      priceProduct: 5,
-      nameProduct: `Bấm móng tay`,
-
-      nameCustomer: "Messi",
-      customerPay: 20,
-      colorProduct: "blue",
-      countQuantityEdit: 0,
-    },
-    {
-      key: "1",
-      nameJob: "nailolish",
-      description: "nail polish for customers",
-      time: new Date("2022-01-25"),
-
-      idEmployee: "1",
-      nameEmployee: "Tinh",
-
-      idProduct: "1",
-      quantityProduct: 2,
-      priceProduct: 3,
-      nameProduct: `Bấm móng chân`,
-
-      nameCustomer: "Ronaldo",
-      customerPay: 30,
-      colorProduct: "red",
-      countQuantityEdit: 0,
-    },
-    {
-      key: "3",
-      nameJob: "nail polish",
-      description: "nail polish for customers",
-      time: new Date("2022-01-25"),
-
-      idEmployee: "2",
-      nameEmployee: "Giang",
-
-      idProduct: "2",
-      quantityProduct: 2,
-      priceProduct: 4,
-      nameProduct: "Bấm móng chân",
-
-      nameCustomer: "Neymar",
-      customerPay: 40,
-      colorProduct: "red",
-      countQuantityEdit: 0,
-    },
-  ],
+  dataJob: [],
 };
 
 export const jobSlice = createSlice({

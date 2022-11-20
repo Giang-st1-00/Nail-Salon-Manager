@@ -49,17 +49,19 @@ function SideBar() {
           defaultSelectedKeys={[indexCurrentRoute.toString()]}
           items={items}
         />
-        <div className={cx("switch-theme")}>
-          <span>
-            <BulbOutlined className={cx("icon-bulb")} />
-            Switch Theme
-          </span>
-          <Switch
-            checkedChildren="Dark"
-            unCheckedChildren="Light"
-            onChange={handleToggleDarkMode}
-          />
-        </div>
+        {!collapsed && (
+          <div className={cx("switch-theme")}>
+            <span>
+              <BulbOutlined className={cx("icon-bulb")} />
+              Switch Theme
+            </span>
+            <Switch
+              checkedChildren="Dark"
+              unCheckedChildren="Light"
+              onChange={handleToggleDarkMode}
+            />
+          </div>
+        )}
       </div>
     </Sider>
   );
