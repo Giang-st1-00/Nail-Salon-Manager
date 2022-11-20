@@ -1,74 +1,54 @@
-import { Layout, Menu, Typography, Switch } from "antd";
-import type { MenuProps } from "antd";
-import { Link } from "react-router-dom";
+import { Layout, Menu, Switch } from "antd";
+import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames/bind";
-import style from "./index.module.scss";
+
 import images from "../../assets/images";
+import { BulbOutlined } from "@ant-design/icons";
+import { items } from "./configSideBar";
+import config from "../../config";
+import { changeDarkMode, toggleCollapsed } from "../../redux/slices/activeUser";
 import {
-  DashboardOutlined,
-  UserOutlined,
-  ToolOutlined,
-  DollarCircleOutlined,
-  ShoppingOutlined,
-  BulbOutlined,
-} from "@ant-design/icons";
+  darkModeSelector,
+  collapsedSelector,
+} from "../../redux/selector/activeUser";
+import style from "./index.module.scss";
+
 const cx = classNames.bind(style);
 const { Sider } = Layout;
 
-const items = [
-  {
-    key: 1,
-    icon: <DashboardOutlined />,
-    label: "Dashboard",
-    path: "/",
-  },
-  {
-    key: 2,
-    icon: <UserOutlined />,
-    label: "User",
-    path: "user",
-  },
-  {
-    key: 3,
-    icon: <ToolOutlined />,
-    label: "Job",
-    path: "job",
-  },
-  {
-    key: 4,
-    icon: <DollarCircleOutlined />,
-    label: "Salary",
-    path: "salary",
-  },
-  {
-    key: 5,
-    icon: <ShoppingOutlined />,
-    label: "Product",
-    path: "product",
-  },
-];
-const SubMenu = Menu.SubMenu;
 function SideBar() {
+  const { pathname } = useLocation();
+  const dispatch = useDispatch();
+  const darkMode = useSelector(darkModeSelector);
+  const collapsed = useSelector(collapsedSelector);
+  let indexCurrentRoute =
+    config.routes.findIndex((route) => route.path === pathname) + 1;
+  const handleToggleDarkMode = (checked: boolean) => {
+    checked
+      ? dispatch(changeDarkMode("dark"))
+      : dispatch(changeDarkMode("light"));
+  };
   return (
-    // dark light
-    <Sider width={256} theme="light" trigger={null}>
+    <Sider
+      width={256}
+      theme={darkMode}
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+    >
       <div className={cx("wrapper")}>
         <div className={cx("brand")}>
           <img src={images.logo} alt="" className={cx("logo")} />
-          <h1 className={cx("title")}>ANTD ADMIN</h1>
+          {!collapsed && <h1 className={cx("title")}>ANTD ADMIN</h1>}
         </div>
         <Menu
           className={cx("menu")}
-          theme="light"
+          theme={darkMode}
           mode="inline"
-          defaultSelectedKeys={["1"]}
-        >
-          {items.map((item) => (
-            <Menu.Item key={item.key} icon={item.icon}>
-              <Link to={item.path}>{item.label}</Link>
-            </Menu.Item>
-          ))}
-        </Menu>
+          defaultSelectedKeys={[indexCurrentRoute.toString()]}
+          items={items}
+        />
         <div className={cx("switch-theme")}>
           <span>
             <BulbOutlined className={cx("icon-bulb")} />
@@ -77,7 +57,7 @@ function SideBar() {
           <Switch
             checkedChildren="Dark"
             unCheckedChildren="Light"
-            defaultChecked
+            onChange={handleToggleDarkMode}
           />
         </div>
       </div>

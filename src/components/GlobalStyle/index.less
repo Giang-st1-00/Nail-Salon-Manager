@@ -4,6 +4,7 @@
   --footer-height: 72px;
   --header-height: 72px;
   --switch-height: 48px;
+  --text-color: #666;
 }
 * {
   padding: 0;
@@ -15,4 +16,15 @@ html {
 }
 body {
   overflow: auto;
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #e6e6e6;
+  }
+}
+p{
+  padding : 0;
+  margin : 0;
 }
