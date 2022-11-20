@@ -1,10 +1,10 @@
-tech using in project :
+tech using in project :\
 -> npx-create-react, react-router-dom, sass, redux redux-toolkit, antd,
 uuid, typescript, className
 link deploy: https://manager-nail.web.app/
 Description:
 App gồm 4 trang:
----DashBoard:__
+---DashBoard:
 Hiển thị thông tin bao gồm:
 +Số lượng user
 +Số lượng job
