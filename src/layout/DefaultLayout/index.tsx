@@ -6,7 +6,6 @@ import Header from "../Header";
 import Footer from "../Footer";
 import SideBar from "../SideBar";
 import style from "./index.module.scss";
-
 const cx = classNames.bind(style);
 const { Content } = Layout;
 

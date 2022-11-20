@@ -36,20 +36,18 @@ function CommonButton({
     [className]: className,
   });
   return (
-    <div className={cx("wrapper")}>
-      <Button
-        shape={shape}
-        size={size}
-        className={classes}
-        icon={icon}
-        type={type}
-        htmlType={htmlType}
-        onClick={onClick}
-        {...props}
-      >
-        {children}
-      </Button>
-    </div>
+    <Button
+      shape={shape}
+      size={size}
+      className={classes}
+      icon={icon}
+      type={type}
+      htmlType={htmlType}
+      onClick={onClick}
+      {...props}
+    >
+      {children}
+    </Button>
   );
 }
 

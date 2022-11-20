@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Col,
   Dropdown,
@@ -7,7 +7,11 @@ import {
   Row,
   Input,
   FormInstance,
-  DatePicker, Space, Button, MenuProps, Menu,
+  DatePicker,
+  Space,
+  Button,
+  MenuProps,
+  Menu,
   Cascader,
   InputNumber,
 } from "antd";
@@ -21,23 +25,30 @@ import {
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { useRef, useState } from "react";
-import { IFilter, IJob, IUser } from "../../model";
+import { IFilter, IJob, IProduct, IUser } from "../../model";
 import { useDispatch, useSelector } from "react-redux";
 import remainingJob from "../../redux/selectors/job";
-import { addJob, changeStatus, deleteJob, editJob } from "../../redux/slices/job";
+import {
+  addJob,
+  changeStatus,
+  deleteJob,
+  editJob,
+} from "../../redux/slices/job";
 import CommonButton from "../../components/Button";
 import { v4 as uuidv4 } from "uuid";
-import remainingUser from '../../redux/selectors/user';
-import Select from "rc-select";
+import remainingUser from "../../redux/selectors/user";
+import { remainingProduct } from "../../redux/selector";
+import product, { editProduct } from "../../redux/slices/product";
 
 const cx = classNames.bind(style);
 const { confirm } = Modal;
 const { RangePicker } = DatePicker;
 
-interface Option {
+type Option = {
   value: string | number;
   label: string;
-}
+  children?: Option[];
+};
 
 function Job() {
   const dispatch = useDispatch();
@@ -48,16 +59,21 @@ function Job() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const dataJob: Array<IJob> = useSelector(remainingJob);
   const dataUser: Array<IUser> = useSelector(remainingUser);
-  const { Option } = Select;
-  
+  const dataProduct: Array<IProduct> = useSelector(remainingProduct);
   const { Search } = Input;
+  const [maxQuantityProduct , setMaxQuantityProduct] = useState(5);
 
-  const options: Option[] = dataUser.map((item,index) => {
+  const employeeOptions: Option[] = dataUser.map((item, index) => {
     return {
-      label : `${item.name}`,
-      value : `${item.name}`,
-    }
-  })
+      value: item.key,
+      label: item.name,
+    };
+  });
+
+  const optionProduct = dataProduct.map((product) => ({
+    value: product.key,
+    label: product.name + " - " + product.color,
+  }));
 
   const handleFilter = (values: IFilter) => {
     if (values.name || values.date) {
@@ -87,20 +103,55 @@ function Job() {
     setIsModalOpen(true);
   };
 
-  const getUserByName = (nameEmployee : string) => {
-    let userSelected = dataUser.find((user) => user.name == nameEmployee)
+  const getUserById = (nameEmployee: string) => {
+    let userSelected = dataUser.find((user) => user.key == nameEmployee);
     return userSelected;
   };
 
+  const getProductById = (nameProduct: string) => {
+    let productSelected = dataProduct.find(
+      (product) => product.key == nameProduct
+    );
+    return productSelected;
+  };
+
+  const getMaxItemProduct = (key : string) => {
+    let product = getProductById(key);
+    if (product) {
+      let max = product.quantity;
+      setMaxQuantityProduct(max);
+    }
+  }
+
   const handleSubmitDataJob = (job: IJob) => {
-    if (job.key) {
-      let userSelected = getUserByName(job.nameEmployee);
-      if (userSelected) {
-        dispatch(editJob({ ...job, nameEmployee : userSelected.name , idEmployee : userSelected.key}));
-      }
-    } else {
+    let userSelected = getUserById(job.idEmployee);
+    let productSelected = getProductById(job.idProduct);
+    
+    if (job.key && userSelected && productSelected) {
+      dispatch(
+        editJob({
+          ...job,
+          nameEmployee: userSelected.name,
+          idEmployee: userSelected.key,
+          nameProduct: productSelected.name,
+          idProduct: productSelected.key,
+          quantityProduct : productSelected.quantity,
+          priceProduct : productSelected.price,
+          colorProduct : productSelected.color,
+        })
+      );
+    } 
+    
+    if (!job.key && userSelected && productSelected) {
       const newJob: IJob = {
         ...job,
+        nameEmployee: userSelected.name,
+        idEmployee: userSelected.key,
+        nameProduct: productSelected.name,
+        idProduct: productSelected.key,
+        quantityProduct : productSelected.quantity,
+        priceProduct : productSelected.price,
+        colorProduct : productSelected.color,
         time: new Date(),
         key: uuidv4(),
       };
@@ -121,11 +172,10 @@ function Job() {
   };
 
   const handleMenuRowClick = (key: string, record: IJob) => {
-    form.setFieldsValue({...record , time : record.time.toLocaleString()});
+    form.setFieldsValue({ ...record, time: record.time.toLocaleString() });
     key === "edit" ? setIsModalOpen(true) : showConfirmDeleteUSer(record.key);
   };
 
-  //--------------------------------TABLE---------------------------------
   const columns: ColumnsType<IJob> = [
     {
       title: "Name Job",
@@ -210,7 +260,7 @@ function Job() {
             items: itemsActionRow,
             onClick: ({ key }) => {
               handleMenuRowClick(key, record);
-            }
+            },
           }}
         >
           <CommonButton className={cx("no-border")}>
@@ -273,19 +323,19 @@ function Job() {
             </Form.Item>
           </Col>
           <Col span={9}>
-              <Row gutter={[16,16]}>
+            <Row gutter={[16, 16]}>
               <Col span={4}>
                 <Form.Item shouldUpdate>
-                    <CommonButton type="primary" htmlType="submit">
-                      Search
-                    </CommonButton>
+                  <CommonButton type="primary" htmlType="submit">
+                    Search
+                  </CommonButton>
                 </Form.Item>
               </Col>
               <Col span={4} offset={2}>
                 <Form.Item shouldUpdate>
-                    <CommonButton type="default" onClick={handleResetForm}>
-                      Reset
-                    </CommonButton>
+                  <CommonButton type="default" onClick={handleResetForm}>
+                    Reset
+                  </CommonButton>
                 </Form.Item>
               </Col>
               <Col span={4} offset={10}>
@@ -293,7 +343,7 @@ function Job() {
                   Create
                 </CommonButton>
               </Col>
-              </Row>
+            </Row>
           </Col>
         </Row>
       </Form>
@@ -314,14 +364,14 @@ function Job() {
         onOk={() => {
           form
             .validateFields()
-              .then((values) => {
-                handleSubmitDataJob(values);
-              })
-              .catch((info) => {
-                console.log("Validate Failed:", info);
-              });
+            .then((values) => {
+              handleSubmitDataJob(values);
+            })
+            .catch((info) => {
+              console.log("Validate Failed:", info);
+            });
         }}
-        onCancel={() =>  setIsModalOpen(false)}
+        onCancel={() => setIsModalOpen(false)}
       >
         <Form
           form={form}
@@ -334,45 +384,67 @@ function Job() {
             <Input />
           </Form.Item>
 
-          <Form.Item name="nameJob"
+          <Form.Item
+            name="nameJob"
             label="Name Job"
             rules={[{ required: true, message: "Please input your name!" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item name="description" label="Description" rules={[{ required: true, message: "Please input description!" }]}>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please input description!" }]}
+          >
             <Input />
           </Form.Item>
 
           <Form.Item name="time" label="Time">
-            <Input disabled/>
+            <Input disabled />
           </Form.Item>
 
-          <Form.Item name="idEmployee" hidden>
+          <Form.Item
+            name="idEmployee"
+            label="Name Employee"
+            rules={[{ required: true }]}
+          >
+            <Cascader options={employeeOptions} placeholder="Please select" />
           </Form.Item>
 
-          <Form.Item name="nameEmployee" label="Name Employee" rules={[{ required: true }]}>
-            <Cascader options={options} placeholder="Please select" />
+          <Form.Item name="nameEmployee" hidden></Form.Item>
+
+          <Form.Item
+            name="idProduct"
+            label="Name Product"
+            rules={[{ required: true }]}
+          >
+            <Cascader onChange={() => {getMaxItemProduct(form.getFieldValue('idProduct'))}} options={optionProduct} placeholder="Please select" />
           </Form.Item>
 
-          <Form.Item name="nameProduct" hidden>
+          <Form.Item name="nameProduct" hidden></Form.Item>
+
+          <Form.Item name="quantityProduct" label="quantity">
+            <InputNumber min={0} max={maxQuantityProduct} />
           </Form.Item>
 
-          <Form.Item name="quantityProduct" hidden>
-          </Form.Item>
+          <Form.Item name="priceProduct" hidden></Form.Item>
 
-          <Form.Item name="priceProduct" hidden>
-          </Form.Item>
+          <Form.Item name="colorProduct" hidden></Form.Item>
 
-          <Form.Item name="colorProduct" hidden>
-          </Form.Item>
-
-          <Form.Item name="nameCustomer" label="Name Customer" rules={[{ required: true }]}>
+          <Form.Item
+            name="nameCustomer"
+            label="Name Customer"
+            rules={[{ required: true }]}
+          >
             <Input />
           </Form.Item>
 
-          <Form.Item name="customerPay" label="Pay" rules={[{ required: true }]}>
+          <Form.Item
+            name="customerPay"
+            label="Pay"
+            rules={[{ required: true }]}
+          >
             <InputNumber />
           </Form.Item>
         </Form>

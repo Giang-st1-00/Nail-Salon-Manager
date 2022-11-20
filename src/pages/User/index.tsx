@@ -25,7 +25,7 @@ import classNames from "classnames/bind";
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
 import { IUser, IFilter } from "../../model";
-import remainingUser from "../../redux/selectors/user";
+import { remainingUser } from "../../redux/selector";
 
 import {
   addUser,
@@ -40,12 +40,6 @@ const cx = classNames.bind(style);
 const { RangePicker } = DatePicker;
 const { confirm } = Modal;
 
-interface Option {
-  value: string | number;
-  label: string;
-  children?: Option[];
-}
-
 function User() {
   const [form] = Form.useForm();
   const formFilterRef = useRef<FormInstance>(null);
@@ -54,44 +48,7 @@ function User() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const dataUser: Array<IUser> = useSelector(remainingUser);
-
   const dispatch = useDispatch();
-
-  const options: Option[] = [
-    {
-      value: 'zhejiang',
-      label: 'Zhejiang',
-      children: [
-        {
-          value: 'hangzhou',
-          label: 'Hangzhou',
-          children: [
-            {
-              value: 'xihu',
-              label: 'West Lake',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      value: 'jiangsu',
-      label: 'Jiangsu',
-      children: [
-        {
-          value: 'nanjing',
-          label: 'Nanjing',
-          children: [
-            {
-              value: 'zhonghuamen',
-              label: 'Zhong Hua Men',
-            },
-          ],
-        },
-      ],
-    },
-  ];
-  
 
   const itemsActionRow = [
     { key: "edit", label: "Update" },
@@ -162,7 +119,6 @@ function User() {
       ),
     },
   ];
-
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedRowKeys: React.Key[]) => {
@@ -187,7 +143,6 @@ function User() {
 
   const handleResetForm = () => {
     setLoading(true);
-
     setTimeout(() => {
       dispatch(
         changeStatus({
@@ -245,6 +200,7 @@ function User() {
     form.setFieldsValue(record);
     key === "edit" ? setIsModal(true) : showConfirmDeleteUSer(record.key);
   };
+
   return (
     <div>
       <Form

@@ -34,7 +34,7 @@ const initialState : JobState = {
         idProduct: '1', 
         quantityProduct: 2, 
         priceProduct :  5,
-        nameProduct : `Nail polish`,
+        nameProduct : `Bấm móng tay`,
 
         nameCustomer : "Messi",
         customerPay : 20,
@@ -52,7 +52,7 @@ const initialState : JobState = {
         idProduct: '1', 
         quantityProduct: 2, 
         priceProduct :  3,
-        nameProduct : `Nail polish`,
+        nameProduct : `Bấm móng chân`,
     
         nameCustomer : "Ronaldo",
         customerPay : 30,
@@ -70,7 +70,7 @@ const initialState : JobState = {
         idProduct: '2', 
         quantityProduct: 2, 
         priceProduct :  4,
-        nameProduct : 'Nail Polish',
+        nameProduct : 'Bấm móng chân',
     
         nameCustomer : "Neymar",
         customerPay : 40,

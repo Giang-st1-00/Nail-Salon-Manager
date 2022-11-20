@@ -1,4 +1,4 @@
-export default interface JobState {
+export interface IJob {
     key : string;
     nameJob : string;
     description ?: string;

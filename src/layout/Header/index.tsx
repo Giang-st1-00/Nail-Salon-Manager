@@ -1,4 +1,8 @@
 import classNames from "classnames/bind";
+import { useSelector, useDispatch } from "react-redux";
+
+import { toggleCollapsed } from "../../redux/slices/activeUser";
+import { collapsedSelector } from "../../redux/selector/activeUser";
 import {
   Avatar,
   Badge,
@@ -17,62 +21,70 @@ import style from "./index.module.scss";
 
 const cx = classNames.bind(style);
 function Header() {
-  const dataNotification = [
-    {
-      content: "New User is registered",
-      time: "3 小时前",
-    },
-    {
-      content: "Application has been approved.",
-      time: "14 小时前",
-    },
-    {
-      content: "New User is registered",
-      time: "3 小时前",
-    },
-    {
-      content: "Application has been approved.",
-      time: "14 小时前",
-    },
-    {
-      content: "New User is registered",
-      time: "3 小时前",
-    },
-  ];
+  const dispatch = useDispatch();
+  const collapsed = useSelector(collapsedSelector);
+  const handleToggleCollapsed = () => {
+    dispatch(toggleCollapsed(!collapsed));
+  };
+  // const dataNotification = [
+  //   {
+  //     content: "New User is registered",
+  //     time: "3 小时前",
+  //   },
+  //   {
+  //     content: "Application has been approved.",
+  //     time: "14 小时前",
+  //   },
+  //   {
+  //     content: "New User is registered",
+  //     time: "3 小时前",
+  //   },
+  //   {
+  //     content: "Application has been approved.",
+  //     time: "14 小时前",
+  //   },
+  //   {
+  //     content: "New User is registered",
+  //     time: "3 小时前",
+  //   },
+  // ];
 
-  const notification = (
-    <div className={cx("notification-list")}>
-      {dataNotification.map((item, index) => {
-        const items: MenuProps["items"] = [
-          {
-            key: index,
-            label: item.content,
-          },
-        ];
-
-        return (
-          <div className={cx("notification-item")}>
-            <div>
-              <Dropdown menu={{ items }} placement="top" arrow>
-                <h4>{item.content}</h4>
-              </Dropdown>
-              <p>{item.time}</p>
-            </div>
-              <RightOutlined />
-          </div>
-        );
-      })}
-      <div>
-        <p className={cx("clear-notificaiton")}>Clear notifications</p>
-      </div>
-    </div>
-  );
+  // const notification = (
+  //   <div className={cx("notification-list")}>
+  //     {dataNotification.map((item, index) => {
+  //       const items: MenuProps["items"] = [
+  //         {
+  //           key: index,
+  //           label: item.content,
+  //         },
+  //       ];
+  //       return (
+  //         <div className={cx("notification-item")}>
+  //           <div>
+  //             <Dropdown menu={{ items }} placement="top" arrow>
+  //               <h4>{item.content}</h4>
+  //             </Dropdown>
+  //             <p>{item.time}</p>
+  //           </div>
+  //             <RightOutlined />
+  //         </div>
+  //       );
+  //     })}
+  //     <div>
+  //       <p className={cx("clear-notificaiton")}>Clear notifications</p>
+  //     </div>
+  //   </div>
+  // );
   return (
-    <div className={cx("wrapper")}>
-      <div className={cx("toggle_sideBar")}>
-        <MenuFoldOutlined />
+    <div
+      className={cx("wrapper", {
+        collapsed,
+      })}
+    >
+      <div className={cx("menuFoldOutlined")} onClick={handleToggleCollapsed}>
+        <MenuFoldOutlined className={cx("menuIcon")} />
       </div>
-      <div className={cx("action")}>
+      {/* <div className={cx("action")}>
         <Popover
           className={cx("bellOutlined")}
           trigger={"click"}
@@ -135,7 +147,7 @@ function Header() {
             <Menu.Item>Sign out</Menu.Item>
           </Menu.SubMenu>
         </Menu>
-      </div>
+      </div> */}
     </div>
   );
 }

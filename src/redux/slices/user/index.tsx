@@ -2,16 +2,14 @@ import { createSlice, PayloadActionCreator } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IFilter } from "../../../model";
 
-
-type UserState = {
+type TUserState = {
   filter: {
     name: string;
     date: Array<string>;
   };
   dataUser: Array<IUser>;
 };
-
-const initialState: UserState = {
+const initialState: TUserState = {
   filter: {
     name: "",
     date: ["", ""],
