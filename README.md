@@ -4,7 +4,7 @@ uuid, typescript, className
 link deploy: https://manager-nail.web.app/
 Description:
 App gồm 4 trang:
----DashBoard:
+---DashBoard:__
 Hiển thị thông tin bao gồm:
 +Số lượng user
 +Số lượng job
