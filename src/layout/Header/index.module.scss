@@ -4,5 +4,24 @@
   right: 0;
   width: calc(100% - var(--sidebar-width));
   height: var(--header-height);
-  background-color: #ccc;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &.collapsed {
+    width: calc(100% - 80px);
+  }
+  .btn-collapse {
+    width: 72px;
+    height: 72px;
+    background-color: var(--white-color);
+    cursor: pointer;
+    transition: 0.5s;
+    span {
+      font-size: 18px;
+    }
+    &:hover {
+      color: #1890ff;
+    }
+  }
 }

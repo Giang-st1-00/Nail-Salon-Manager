@@ -1,8 +1,8 @@
 .wrapper {
-    display: inline-block; 
-    .btn {
-    }
-    .btn + .btn {
-        margin-left: 16px;
-    }
+  &.no-border {
+    border: none;
+  }
+  .btn + .btn {
+    margin-left: 16px;
+  }
 }

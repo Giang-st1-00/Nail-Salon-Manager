@@ -1,11 +1,7 @@
 import { Breadcrumb } from "antd";
 import { useLocation, Link } from "react-router-dom";
-import {
-  DashboardOutlined,
-  ToolOutlined,
-  DollarCircleOutlined,
-  ShoppingOutlined,
-} from "@ant-design/icons";
+import { DashboardOutlined } from "@ant-design/icons";
+import config from "../../config";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
 const cx = classNames.bind(style);
@@ -30,11 +26,19 @@ function BreadCrumb() {
         )}
         {arrPathNames.map((name, index) => {
           const routeTo = `/${arrPathNames.slice(0, index + 1).join("/")}`;
+          const indexCurrentRoute = config.routes.findIndex(
+            (route) => route.path === routeTo
+          );
+          const icon = config.routes[indexCurrentRoute].icon;
           const isLate = index === arrPathNames.length - 1;
           return isLate ? (
-            <Breadcrumb.Item>{handleCapitalize(name)}</Breadcrumb.Item>
+            <Breadcrumb.Item key={index}>
+              {icon}
+              <span>{handleCapitalize(name)}</span>
+            </Breadcrumb.Item>
           ) : (
-            <Breadcrumb.Item>
+            <Breadcrumb.Item key={index}>
+              {icon}
               <Link to={routeTo}>{handleCapitalize(name)}</Link>
             </Breadcrumb.Item>
           );
