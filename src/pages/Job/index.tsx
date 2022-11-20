@@ -14,6 +14,7 @@ import {
   Menu,
   Cascader,
   InputNumber,
+  Popconfirm,
 } from "antd";
 import classNames from "classnames/bind";
 import style from "./index.module.scss";
@@ -32,6 +33,7 @@ import {
   addJob,
   changeStatus,
   deleteJob,
+  deleteListJob,
   editJob,
 } from "../../redux/slices/job";
 import CommonButton from "../../components/Button";
@@ -134,10 +136,9 @@ function Job() {
           nameEmployee: userSelected.name,
           idEmployee: userSelected.key,
           nameProduct: productSelected.name,
-          idProduct: productSelected.key,
-          quantityProduct : productSelected.quantity,
-          priceProduct : productSelected.price,
           colorProduct : productSelected.color,
+          idProduct: productSelected.key,
+          priceProduct : productSelected.price,
         })
       );
     } 
@@ -149,7 +150,6 @@ function Job() {
         idEmployee: userSelected.key,
         nameProduct: productSelected.name,
         idProduct: productSelected.key,
-        quantityProduct : productSelected.quantity,
         priceProduct : productSelected.price,
         colorProduct : productSelected.color,
         time: new Date(),
@@ -294,6 +294,15 @@ function Job() {
     },
   };
 
+  const handleDeleteListJob = () => {
+    setLoading(true);
+    setTimeout(() => {
+      dispatch(deleteListJob(selectedRowKeys));
+      setSelectedRowKeys([]);
+      setLoading(false);
+    }, 1000);
+  };
+
   return (
     <div className={cx("contentInner")}>
       <Form
@@ -347,6 +356,25 @@ function Job() {
           </Col>
         </Row>
       </Form>
+
+      <div className={cx("action-delete")}>
+        {selectedRowKeys.length > 0 && (
+          <>
+            <span className={cx("count-select")}>
+              Selected {selectedRowKeys.length} items
+            </span>
+            <Popconfirm
+              title="Are you sure delete these items?"
+              placement="left"
+              onConfirm={handleDeleteListJob}
+              okText="OK"
+              cancelText="Cancel"
+            >
+              <CommonButton type="primary">Remove</CommonButton>
+            </Popconfirm>
+          </>
+        )}
+      </div>
 
       <Table
         className={cx("tableJob")}
