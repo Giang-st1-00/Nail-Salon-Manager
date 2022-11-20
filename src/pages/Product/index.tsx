@@ -25,7 +25,7 @@ import classNames from "classnames/bind";
 import { IProduct, IFilter } from "../../model";
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
-import { remainingProduct } from "../../redux/selector";
+import { remainingProduct } from "../../redux/selectors";
 import {
   addProduct,
   deleteProduct,
@@ -227,7 +227,6 @@ function Product() {
   };
 
   const handleSubmitDataProduct = (product: IProduct) => {
-    console.log(product);
     if (product.key) {
       const newProduct: IProduct = {
         ...product,

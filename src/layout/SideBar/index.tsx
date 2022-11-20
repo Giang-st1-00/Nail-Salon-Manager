@@ -11,7 +11,7 @@ import { changeDarkMode, toggleCollapsed } from "../../redux/slices/activeUser";
 import {
   darkModeSelector,
   collapsedSelector,
-} from "../../redux/selector/activeUser";
+} from "../../redux/selectors/activeUser";
 import style from "./index.module.scss";
 
 const cx = classNames.bind(style);

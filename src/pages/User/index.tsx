@@ -25,7 +25,7 @@ import classNames from "classnames/bind";
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
 import { IUser, IFilter } from "../../model";
-import { remainingUser } from "../../redux/selector";
+import { remainingUser } from "../../redux/selectors";
 
 import {
   addUser,
@@ -106,7 +106,9 @@ function User() {
         <Dropdown
           menu={{
             items: itemsActionRow,
-            onClick: ({ key }) => handleMenuRowClick(key, record),
+            onClick: ({ key }) => {
+              handleMenuRowClick(key, record);
+            },
           }}
         >
           <CommonButton className={cx("no-border")}>
@@ -167,6 +169,8 @@ function User() {
         createTime: new Date(),
         key: uuidv4(),
       };
+      console.log(newUser);
+
       dispatch(addUser(newUser));
     }
     setIsModal(false);

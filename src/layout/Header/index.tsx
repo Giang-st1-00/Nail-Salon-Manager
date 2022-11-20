@@ -3,7 +3,7 @@ import style from "./index.module.scss";
 import { useSelector, useDispatch } from "react-redux";
 
 import { toggleCollapsed } from "../../redux/slices/activeUser";
-import { collapsedSelector } from "../../redux/selector/activeUser";
+import { collapsedSelector } from "../../redux/selectors/activeUser";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 
 const cx = classNames.bind(style);

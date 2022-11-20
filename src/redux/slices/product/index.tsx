@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IProduct, IFilter } from "../../../model";
-
+import { editJob } from "../job";
 type TProductState = {
   filter: {
     name: string;
@@ -74,20 +74,33 @@ const productSlice = createSlice({
     },
     useProduct: (
       state,
-      action: PayloadAction<{ key: string; quantity: number }>
+      action: PayloadAction<{ keyProduct: string; countQuantityEdit: number }>
     ) => {
       const indexAddProduct = state.dataProduct.findIndex(
-        (Product) => Product.key === action.payload.key
+        (Product) => Product.key === action.payload.keyProduct
       );
       state.dataProduct[indexAddProduct].exportQuantity +=
-        action.payload.quantity;
+        action.payload.countQuantityEdit;
       state.dataProduct[indexAddProduct].remainingQuantity -=
-        action.payload.quantity;
+        action.payload.countQuantityEdit;
     },
 
     changeStatus: (state, action: PayloadAction<IFilter>) => {
       state.filter = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(editJob, (state, action) => {
+        const indexAddProduct = state.dataProduct.findIndex(
+          (Product) => Product.key === action.payload.idProduct
+        );
+        state.dataProduct[indexAddProduct].exportQuantity +=
+          action.payload.countQuantityEdit;
+        state.dataProduct[indexAddProduct].remainingQuantity -=
+          action.payload.countQuantityEdit;
+      })
+      .addDefaultCase((state, action) => {});
   },
 });
 export default productSlice.reducer;
@@ -98,4 +111,5 @@ export const {
   editProduct,
   addExistProduct,
   changeStatus,
+  useProduct,
 } = productSlice.actions;

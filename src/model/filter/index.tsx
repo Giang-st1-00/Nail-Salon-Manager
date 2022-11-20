@@ -1,4 +1,5 @@
 export interface IFilter {
-  name: string;
-  date: Array<string>;
-}
+    name: string;
+    date: Array<string>;
+  }
+  

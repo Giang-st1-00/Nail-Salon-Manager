@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadActionCreator } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IUser, IFilter } from "../../../model";
 
@@ -17,7 +17,7 @@ const initialState: TUserState = {
   dataUser: [
     {
       key: "1",
-      name: "Duy Tinh",
+      name: "Tinh",
       nickName: "DT",
       age: 12,
       email: "Tranduytinh@gmail.com",
@@ -41,6 +41,7 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+  
     addUser: (state, action: PayloadAction<IUser>) => {
       state.dataUser.push(action.payload);
     },

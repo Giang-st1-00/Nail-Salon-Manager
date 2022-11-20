@@ -1,0 +1,20 @@
+@baseUrl = https://635c9684f0bc26795b012d0d.mockapi.io
+
+# User
+
+# @name getAllUser
+GET {{baseUrl}}/user
+
+
+
+
+
+
+
+
+
+
+
+
+
+

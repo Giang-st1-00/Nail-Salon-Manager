@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
-import { IProduct, IFilter } from "../../model";
-import { remainingSalary } from "../../redux/selector";
-import { changeStatus } from "../../redux/slices/product";
+import { IFilter } from "../../model";
+import { remainingSalary } from "../../redux/selectors";
+import { changeStatus } from "../../redux/slices/salary";
 
 const { RangePicker } = DatePicker;
 
