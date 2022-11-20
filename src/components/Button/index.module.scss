@@ -1,6 +1,8 @@
-.no-border {
-  border: none;
-}
-.btn + .btn {
-  margin-left: 16px;
+.wrapper {
+  &.no-border {
+    border: none;
+  }
+  .btn + .btn {
+    margin-left: 16px;
+  }
 }

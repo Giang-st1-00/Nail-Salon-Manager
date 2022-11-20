@@ -1,55 +1,23 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 const userSelector = (state: RootState) => state.userSlice.dataUser;
-// const filterJobSelector = (state: RootState) => state.productSlice.filter;
+const jobSelector = (state: RootState) => state.jobSlice.dataJob;
+
+const filterJobSelector = (state: RootState) => state.productSlice.filter;
 const remainingSalary = createSelector(
   userSelector,
-  //   filterProductSelector,
-  (users) => {
-    const jobs = [
-      {
-        id: "1",
-        idEmploy: "2",
-        name: "Tinh",
-        idProduct: "1",
-        quantityProduct: 2,
-        nameJob: "nail polish",
-        description: "nail polish for customers",
-        date: "6-10-2022",
-        nameCustomer: "Messi",
-        customerPay: 20,
-        priceProduct: 5,
-        colorProduct: "blue",
-      },
-      {
-        id: "2",
-        idEmploy: "1",
-        name: "Tinh",
-        idProduct: "1",
-        quantityProduct: 1,
-        nameJob: "nailolish",
-        description: "nail polish for customers",
-        date: "7-10-2022",
-        nameCustomer: "Ronaldo",
-        customerPay: 30,
-        priceProduct: 3,
-        colorProduct: "red",
-      },
-      {
-        id: "3",
-        idEmploy: "2",
-        name: "giang",
-        idProduct: "2",
-        quantityProduct: 2,
-        nameJob: "nailolish",
-        description: "nail polish for customers",
-        date: "8-10-2022",
-        nameCustomer: "Neymar",
-        customerPay: 40,
-        priceProduct: 4,
-        colorProduct: "red",
-      },
-    ];
+  jobSelector,
+  filterJobSelector,
+  (users, jobs, filter) => {
+    // const filterJob = jobs.filter((job) => {
+    //   let isCheckDate = true;
+    //   if (filter.date[0] && filter.date[1]) {
+    //     const endDate = new Date(filter.date[1]);
+    //     const startDate = new Date(filter.date[0]);
+    //     isCheckDate = job.createTime > startDate && job.createTime < endDate;
+    //   }
+    //   return job.name.includes(filter.name) && isCheckDate;
+    // });
     const managerSalary = jobs.reduce(
       (accumulatorSalary: any, currentJob: any) => {
         accumulatorSalary[currentJob.idEmploy] =

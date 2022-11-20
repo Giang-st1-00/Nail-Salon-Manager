@@ -2,7 +2,9 @@ export interface IProduct {
   key: string;
   name: string;
   price: number;
-  quantity: number;
+  importQuantity: number;
+  exportQuantity: number;
+  remainingQuantity: number;
   color: string;
   createTime: Date;
 }

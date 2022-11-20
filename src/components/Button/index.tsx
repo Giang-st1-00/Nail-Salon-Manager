@@ -31,7 +31,7 @@ function CommonButton({
   onClick,
   ...props
 }: TCommonButtonProps) {
-  const classes = cx("btn", {
+  const classes = cx("wrapper", {
     "no-border": !border,
     [className]: className,
   });

@@ -1,10 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { userSlice, productSlice, activeUser } from "../slices";
+import { userSlice, productSlice, activeUserSlice, jobSlice } from "../slices";
 const store = configureStore({
   reducer: {
     userSlice,
     productSlice,
-    activeUser,
+    activeUserSlice,
+    jobSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

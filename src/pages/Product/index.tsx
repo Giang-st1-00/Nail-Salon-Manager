@@ -10,6 +10,7 @@ import {
   Dropdown,
   InputNumber,
   Select,
+  Tabs,
 } from "antd";
 import type { FormInstance } from "antd/es/form";
 import {
@@ -21,9 +22,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import classNames from "classnames/bind";
 
+import { IProduct, IFilter } from "../../model";
 import CommonButton from "../../components/Button";
 import CommonInput from "../../components/Input";
-import { IProduct, IFilter } from "../../model";
 import { remainingProduct } from "../../redux/selector";
 import {
   addProduct,
@@ -41,17 +42,18 @@ const { confirm } = Modal;
 function Product() {
   const [form] = Form.useForm();
   const formFilterRef = useRef<FormInstance>(null);
-  const formAddExistProduct = useRef<FormInstance>(null);
+  const formAddExistProductRef = useRef<FormInstance>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalAddProduct, setIsModalAddProduct] = useState<boolean>(false);
   const [isModalAddExistProduct, setIsModalAddExistProduct] =
     useState<boolean>(false);
   const [isShowStatistical, setShowStatistical] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
+  const [quantityProduct, setQuantityProduct] = useState<number>(0);
   const dispatch = useDispatch();
+
   const dataProduct: Array<IProduct> = useSelector(remainingProduct);
-  const optionProduct = dataProduct.map((product) => ({
+  const optionProductAdd = dataProduct.map((product) => ({
     value: product.key,
     label: product.name + " - " + product.color,
   }));
@@ -70,7 +72,7 @@ function Product() {
       span: 14,
     },
   };
-  const columns = [
+  const columnRemainingProduct = [
     {
       title: "Name Product",
       dataIndex: "name",
@@ -84,7 +86,7 @@ function Product() {
     },
     {
       title: "Quantity Remaining",
-      dataIndex: "quantity",
+      dataIndex: "remainingQuantity",
     },
     {
       title: "Color",
@@ -115,6 +117,62 @@ function Product() {
           </CommonButton>
         </Dropdown>
       ),
+    },
+  ];
+  const columnImportProduct = [
+    {
+      title: "Name Product",
+      dataIndex: "name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      render: (price: number) => {
+        return price + "$ x 1";
+      },
+    },
+    {
+      title: "Quantity",
+      dataIndex: "importQuantity",
+    },
+    {
+      title: "Color",
+      dataIndex: "color",
+    },
+    {
+      title: "Import Time",
+      dataIndex: "createTime",
+      render: (date: Date) => {
+        return date.toLocaleString();
+      },
+    },
+  ];
+  const columnExportProduct = [
+    {
+      title: "Name Product",
+      dataIndex: "name",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      render: (price: number) => {
+        return price + "$ x 1";
+      },
+    },
+    {
+      title: "Quantity",
+      dataIndex: "exportQuantity",
+    },
+    {
+      title: "Color",
+      dataIndex: "color",
+    },
+    {
+      title: "Import Time",
+      dataIndex: "createTime",
+      render: (date: Date) => {
+        return date.toLocaleString();
+      },
     },
   ];
   const rowSelection = {
@@ -159,24 +217,34 @@ function Product() {
   };
 
   const showModalAddProduct = () => {
-    formAddExistProduct.current?.resetFields();
+    formAddExistProductRef.current?.resetFields();
     setIsModalAddExistProduct(true);
   };
+
   const handleAddExistProduct = (data: { key: string; quantity: number }) => {
     dispatch(addExistProduct(data));
     setIsModalAddExistProduct(false);
   };
 
   const handleSubmitDataProduct = (product: IProduct) => {
+    console.log(product);
     if (product.key) {
-      dispatch(editProduct(product));
-    } else {
-      const newUser: IProduct = {
+      const newProduct: IProduct = {
         ...product,
+        importQuantity:
+          product.importQuantity +
+          (product.remainingQuantity - quantityProduct),
+      };
+      dispatch(editProduct(newProduct));
+    } else {
+      const newProduct: IProduct = {
+        ...product,
+        importQuantity: product.remainingQuantity,
+        exportQuantity: 0,
         createTime: new Date(),
         key: uuidv4(),
       };
-      dispatch(addProduct(newUser));
+      dispatch(addProduct(newProduct));
     }
     setIsModalAddProduct(false);
   };
@@ -203,6 +271,7 @@ function Product() {
 
   const handleMenuRowClick = (key: string, record: IProduct) => {
     form.setFieldsValue(record);
+    setQuantityProduct(record.remainingQuantity);
     key === "edit"
       ? setIsModalAddProduct(true)
       : showConfirmDeleteUSer(record.key);
@@ -329,7 +398,7 @@ function Product() {
             <CommonInput />
           </Form.Item>
           <Form.Item
-            name="quantity"
+            name="remainingQuantity"
             label="Quantity"
             rules={[
               {
@@ -340,6 +409,12 @@ function Product() {
             ]}
           >
             <InputNumber min={0} max={100} />
+          </Form.Item>
+          <Form.Item name="importQuantity" hidden>
+            <CommonInput />
+          </Form.Item>
+          <Form.Item name="exportQuantity" hidden>
+            <CommonInput />
           </Form.Item>
           <Form.Item
             name="color"
@@ -363,7 +438,7 @@ function Product() {
           setIsModalAddExistProduct(false);
         }}
         onOk={() => {
-          formAddExistProduct.current
+          formAddExistProductRef.current
             ?.validateFields()
             .then((values) => {
               handleAddExistProduct(values);
@@ -374,7 +449,7 @@ function Product() {
         }}
       >
         <Form
-          ref={formAddExistProduct}
+          ref={formAddExistProductRef}
           initialValues={{}}
           name="form-product"
           scrollToFirstError
@@ -390,7 +465,10 @@ function Product() {
               },
             ]}
           >
-            <Select dropdownMatchSelectWidth={false} options={optionProduct} />
+            <Select
+              dropdownMatchSelectWidth={false}
+              options={optionProductAdd}
+            />
           </Form.Item>
           <Form.Item
             name="quantity"
@@ -429,25 +507,57 @@ function Product() {
       <Table
         loading={loading}
         rowSelection={rowSelection}
-        columns={columns}
+        columns={columnRemainingProduct}
         dataSource={dataProduct}
         pagination={{ showQuickJumper: true }}
       />
 
-      {/* <Modal
-        title="modal-add-exist-product"
+      <Modal
+        title="Statistical Product"
         open={isShowStatistical}
-        onCancel={() => {}}
-        onOk={() => {}}
+        width="700px"
+        onCancel={() => {
+          setShowStatistical(false);
+        }}
         footer={null}
       >
-        <Table
-          loading={loading}
-          columns={columns}
-          dataSource={dataProduct}
-          pagination={{ showQuickJumper: true }}
-        />
-      </Modal> */}
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Import Product" key="1">
+            <Table
+              loading={loading}
+              columns={columnImportProduct}
+              dataSource={dataProduct}
+              pagination={{ showQuickJumper: true }}
+              footer={() =>
+                "total price: " +
+                dataProduct.reduce((accumulatorQuantity, currentProduct) => {
+                  return (accumulatorQuantity =
+                    accumulatorQuantity +
+                    currentProduct.importQuantity * currentProduct.price);
+                }, 0) +
+                "$"
+              }
+            />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Export Product" key="2">
+            <Table
+              loading={loading}
+              columns={columnExportProduct}
+              dataSource={dataProduct}
+              pagination={{ showQuickJumper: true }}
+              footer={() =>
+                "total price: " +
+                dataProduct.reduce((accumulatorQuantity, currentProduct) => {
+                  return (accumulatorQuantity =
+                    accumulatorQuantity +
+                    currentProduct.exportQuantity * currentProduct.price);
+                }, 0) +
+                "$"
+              }
+            />
+          </Tabs.TabPane>
+        </Tabs>
+      </Modal>
 
       <CommonButton onClick={handleShowStatistical}>statistical</CommonButton>
     </div>

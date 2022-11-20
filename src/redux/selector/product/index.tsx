@@ -11,8 +11,8 @@ const remainingProduct = createSelector(
       if (filter.date[0] && filter.date[1]) {
         const endDate = new Date(filter.date[1]);
         const startDate = new Date(filter.date[0]);
-        if (!(product.createTime > startDate && product.createTime < endDate))
-          isCheckDate = false;
+        isCheckDate =
+          product.createTime > startDate && product.createTime < endDate;
       }
       return product.name.includes(filter.name) && isCheckDate;
     });
